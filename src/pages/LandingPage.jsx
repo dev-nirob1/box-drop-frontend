@@ -1,10 +1,10 @@
-import Container from "./components/ui/Container";
-import Heading from "./components/ui/Heading";
-import Paragraph from "./components/ui/Paragraph";
+import Container from "../components/ui/Container";
+import Heading from "../components/ui/Heading";
+import Paragraph from "../components/ui/Paragraph";
 
-function App() {
+const LandingPage = () => {
   return (
-    <>
+    <div>
       <Container>
         <Heading as={1} className="">
           Welcome to Box Drop!
@@ -14,8 +14,8 @@ function App() {
           components and styling.
         </Paragraph>
       </Container>
-    </>
+    </div>
   );
-}
+};
 
-export default App;
+export default LandingPage;
