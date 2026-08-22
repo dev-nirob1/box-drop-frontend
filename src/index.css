@@ -7,6 +7,12 @@
   --color-white: #ffffff;
   --font-heading: "Yantramanav", sans-serif;
   --font-body: "Public Sans", sans-serif;
+  /* breakpoints  */
+  --breakpoint-sm: 576px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 992px;
+  --breakpoint-xl: 1200px;
+  --breakpoint-2xl: 1400px;
 }
 :root {
   /* Heading Sizes — base (mobile) */
@@ -26,39 +32,6 @@
   }
 }
 
-/* globals.css */
-@layer components {
-  .container {
-    width: 90%;
-    margin-inline: auto;
-  }
-
-  @media (min-width: 576px) {
-    .container {
-      max-width: 540px;
-    }
-  }
-  @media (min-width: 768px) {
-    .container {
-      max-width: 720px;
-    }
-  }
-  @media (min-width: 992px) {
-    .container {
-      max-width: 960px;
-    }
-  }
-  @media (min-width: 1200px) {
-    .container {
-      max-width: 1180px;
-    }
-  }
-  @media (min-width: 1400px) {
-    .container {
-      max-width: 1320px;
-    }
-  }
-}
 @media (min-width: 576px) {
   :root {
     --heading-1: 2rem;

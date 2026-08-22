@@ -4,7 +4,7 @@ import Paragraph from "../components/ui/Paragraph";
 
 const LandingPage = () => {
   return (
-    <div>
+    <div className="bg-red-500 min-h-screen flex items-center justify-center">
       <Container>
         <Heading as={1} className="">
           Welcome to Box Drop!

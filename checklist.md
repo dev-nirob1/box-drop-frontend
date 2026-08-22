@@ -5,14 +5,14 @@
 - [*] Vite + React project created
 - [*] Tailwind v4 installed (`@tailwindcss/vite` plugin)
 - [*] `@theme` colors set in `index.css` (primary, secondary, accent, white)
-- [ ] React Router installed and set up
+- [*] React Router installed and set up
 - [ ] Axios installed
-- [ ] Font Awesome installed (npm, class-string props)
+- [ ] Font Awesome/react-icons installed (npm, class-string props)
 
 ## Folder structure
 
 - [ ] `src/api/` — axiosInstance.js, authApi.js, parcelApi.js, adminApi.js
-- [ ] `src/components/ui/` — Button, Input, Badge, Card, Loader, Modal
+- [*] `src/components/ui/` — Button, Input, Badge, Card, Loader, Modal
 - [ ] `src/components/layout/` — Navbar, Footer, AdminSidebar, AdminTopbar
 - [ ] `src/components/landing/` — Hero, HowItWorks, Services, WhyChooseUs, CTA
 - [ ] `src/components/parcels/` — ParcelSearchBar, ParcelTable, ParcelCard, TrackResult, StatusTimeline
