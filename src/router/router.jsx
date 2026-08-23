@@ -3,6 +3,7 @@ import MainLayout from "../layout/MainLayout";
 import LandingPage from "../pages/LandingPage";
 import { authRoutes } from "./authRoutes";
 import { dashboardRoutes } from "./dashboardRoutes";
+import { adminRoutes } from "./adminRoutes";
 
 export const router = createBrowserRouter([
   {
@@ -17,4 +18,5 @@ export const router = createBrowserRouter([
   },
   authRoutes,
   dashboardRoutes,
+  adminRoutes
 ]);
