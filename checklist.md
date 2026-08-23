@@ -24,9 +24,9 @@
 
 ## Routes wired in App.jsx
 
-- [ ] `/` — Landing page
-- [ ] `/login` — Login
-- [ ] `/register` — Register
+- [*] `/` — Landing page
+- [*] `/login` — Login
+- [*] `/register` — Register
 - [ ] `/track` — Track search (empty state)
 - [ ] `/track/:trackingId` — Track result
 - [ ] `/dashboard` — User dashboard (protected)
@@ -49,8 +49,8 @@
 
 ## Auth pages
 
-- [ ] Login form (email + password, error state, link to register)
-- [ ] Register form (name, email, password, confirm password, validation)
+- [*] Login form (email + password, error state, link to register)
+- [*] Register form (name, email, password, confirm password, validation)
 - [ ] AuthContext wired (user state, login/logout functions)
 - [ ] Axios interceptor (withCredentials: true, 401 auto-logout)
 
