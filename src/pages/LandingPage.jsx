@@ -1,4 +1,5 @@
 import Hero from "../components/section/Hero";
+import Services from "../components/section/Services";
 import WhyChooseUs from "../components/section/WhyChooseUs";
 import Container from "../components/ui/Container";
 import Heading from "../components/ui/Heading";
@@ -9,6 +10,7 @@ const LandingPage = () => {
     <>
       <Hero />
       <WhyChooseUs />
+      <Services/>
     <div className="bg-red-500 min-h-screen flex items-center justify-center">
       <Container>
         <Heading as={1} className="">
