@@ -1,5 +1,6 @@
 import AuthLayout from "../layout/AuthLayout";
 import LoginPage from "../pages/LoginPage";
+import RegisterPage from "../pages/RegisterPage";
 
 export const authRoutes = {
   element: <AuthLayout />,
@@ -10,7 +11,7 @@ export const authRoutes = {
     },
     {
       path: "/register",
-      element: <div>Register Page</div>,
+      element: <RegisterPage />,
     },
   ],
 };
