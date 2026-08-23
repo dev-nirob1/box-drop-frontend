@@ -50,7 +50,7 @@ const services = [
 
 const Services = () => {
   return (
-    <section className="py-16 bg-secondary/5">
+    <section className="py-16">
       <Container>
         {/* Section Heading */}
         <SectionHeader

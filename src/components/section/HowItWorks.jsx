@@ -40,7 +40,7 @@ const steps = [
 
 const HowItWorks = () => {
   return (
-    <section className="py-16">
+    <section className="py-16 bg-secondary/5">
       <Container>
         <SectionHeader
           badge="How It Works"

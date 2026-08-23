@@ -44,7 +44,7 @@ const FAQ = () => {
   };
 
   return (
-    <section className="py-16">
+    <section className="py-16 bg-secondary/5">
       <Container className="max-w-3xl!">
         <SectionHeader
           badge="FAQ"
