@@ -1,4 +1,5 @@
 import CTA from "../components/section/CTA";
+import FAQ from "../components/section/FAQ";
 import Hero from "../components/section/Hero";
 import Services from "../components/section/Services";
 import WhyChooseUs from "../components/section/WhyChooseUs";
@@ -13,6 +14,7 @@ const LandingPage = () => {
       <WhyChooseUs />
       <Services />
       <CTA />
+      <FAQ />
       <div className="bg-red-500 min-h-screen flex items-center justify-center">
         <Container>
           <Heading as={1} className="">
