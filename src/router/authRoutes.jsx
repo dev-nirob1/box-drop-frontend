@@ -1,11 +1,12 @@
 import AuthLayout from "../layout/AuthLayout";
+import LoginPage from "../pages/LoginPage";
 
 export const authRoutes = {
   element: <AuthLayout />,
   children: [
     {
       path: "/login",
-      element: <div>Login Page</div>,
+      element: <LoginPage />,
     },
     {
       path: "/register",

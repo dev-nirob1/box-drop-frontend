@@ -20,7 +20,7 @@ const Button = ({
       onClick={onClick}
       disabled={disabled}
       className={cn(
-        "px-6 py-3 rounded font-medium cursor-pointer transition-all duration-300 ease-in-out disabled:opacity-50 disabled:cursor-not-allowed",
+        "inline-flex items-center justify-center gap-3 px-6 py-3 rounded font-medium cursor-pointer transition-all duration-300 ease-in-out disabled:opacity-50 disabled:cursor-not-allowed",
         variantStyles[variant],
         className,
       )}
