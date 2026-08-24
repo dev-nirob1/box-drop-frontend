@@ -1,133 +1,205 @@
+import { useState } from "react";
 import { Link } from "react-router";
-import { FiPackage, FiTruck, FiCheckCircle } from "react-icons/fi";
+
 import Heading from "../../components/ui/Heading";
 import Paragraph from "../../components/ui/Paragraph";
-import { cn } from "../../utils/cn";
 
-const stats = [
-  { label: "Total Parcels", value: 12, icon: FiPackage },
-  { label: "In Transit", value: 3, icon: FiTruck },
-  { label: "Delivered", value: 8, icon: FiCheckCircle },
-];
+import TableContainer from "../../components/ui/TableContainer";
+import TableHeader from "../../components/ui/TableHeader";
+import TableRow from "../../components/ui/TableRow";
+import TableData from "../../components/ui/TableData";
 
-const statusStyles = {
-  Pending: "bg-secondary/10 text-secondary",
-  "In Transit": "bg-amber-100 text-amber-600",
-  Delivered: "bg-green-100 text-green-600",
-};
-
+// Dummy data
 const parcels = [
   {
-    id: "BD10293",
-    items: 2,
-    status: "In Transit",
-    location: "Chattogram Hub",
+    trackingId: "BD10293",
+    senderName: "Nirob Hasan",
+    receiverName: "Ayesha Khatun",
+    itemType: "Other",
+    type: "Sent",
+    status: "On the Way",
     date: "22 Aug, 2026",
   },
   {
-    id: "BD10287",
-    items: 1,
+    trackingId: "BD10287",
+    senderName: "Ayesha Khatun",
+    receiverName: "Nirob Hasan",
+    itemType: "Poly Bag",
+    type: "Received",
     status: "Delivered",
-    location: "Dhaka",
     date: "20 Aug, 2026",
   },
   {
-    id: "BD10251",
-    items: 4,
-    status: "Pending",
-    location: "Sylhet Warehouse",
+    trackingId: "BD10251",
+    senderName: "Nirob Hasan",
+    receiverName: "Karim Sheikh",
+    itemType: "Document",
+    type: "Sent",
+    status: "Arrived",
     date: "18 Aug, 2026",
+  },
+  {
+    trackingId: "BD10244",
+    senderName: "Sakib Ahmed",
+    receiverName: "Nirob Hasan",
+    itemType: "Other",
+    type: "Received",
+    status: "At Point",
+    date: "17 Aug, 2026",
   },
 ];
 
+const filterOptions = ["All", "Sent", "Received"];
+
 const UserDashboard = () => {
+  const [filter, setFilter] = useState("All");
+
+  const filteredParcels =
+    filter === "All"
+      ? parcels
+      : parcels.filter((parcel) => parcel.type === filter);
+
   return (
     <div>
-      {/* Greeting */}
+      {/* Heading */}
       <div className="mb-6">
-        <Heading as={3}>Welcome back, Nirob</Heading>
-        <Paragraph>Here's an overview of your parcels.</Paragraph>
+        <Heading as={3}>My Parcels</Heading>
+
+        <Paragraph>
+          Track and manage all your sent and received parcels.
+        </Paragraph>
       </div>
 
-      {/* Stats */}
-      <div className="mb-8 grid gap-4 sm:grid-cols-3">
-        {stats.map((item) => (
-          <div
-            key={item.label}
-            className="flex items-center gap-4 rounded-md border border-secondary/10 bg-white p-5"
-          >
-            <div className="flex h-12 w-12 items-center justify-center rounded bg-accent/10">
-              <item.icon className="text-2xl text-accent" />
-            </div>
-            <div>
-              <Heading as={3} className="mb-0">
-                {item.value}
-              </Heading>
-              <Paragraph className="text-sm">{item.label}</Paragraph>
-            </div>
-          </div>
+      {/* Filter Tabs */}
+      <div className="mb-5 flex gap-2">
+        {filterOptions.map((option) => {
+          const isActive = filter === option;
+
+          return (
+            <button
+              key={option}
+              type="button"
+              onClick={() => setFilter(option)}
+              className={
+                isActive
+                  ? "cursor-pointer rounded-md bg-primary px-4 py-2 text-sm font-medium text-white"
+                  : "cursor-pointer rounded-md border border-secondary/20 px-4 py-2 text-sm font-medium text-secondary hover:bg-secondary/5"
+              }
+            >
+              {option}
+            </button>
+          );
+        })}
+      </div>
+
+      {/* Parcel History */}
+      <TableContainer>
+        <TableHeader
+          gridCols="md:grid-cols-[1fr_1.2fr_1.2fr_0.9fr_0.8fr_1fr_1fr_0.6fr]"
+        >
+          <div>Tracking ID</div>
+          <div>Sender</div>
+          <div>Receiver</div>
+          <div>Item</div>
+          <div>Type</div>
+          <div>Status</div>
+          <div>Date</div>
+          <div></div>
+        </TableHeader>
+
+        {filteredParcels.map((parcel) => (
+          <ParcelRow
+            key={parcel.trackingId}
+            parcel={parcel}
+          />
         ))}
-      </div>
-
-      {/* Parcel table */}
-      <div className="rounded-md border border-secondary/10 bg-white">
-        <div className="border-b border-secondary/10 px-5 py-4">
-          <Heading as={5} className="mb-0">
-            My Parcels
-          </Heading>
-        </div>
-
-        <div className="overflow-x-auto">
-          <table className="w-full text-left text-sm">
-            <thead>
-              <tr className="border-b border-secondary/10 text-secondary">
-                <th className="px-5 py-3 font-medium">Tracking ID</th>
-                <th className="px-5 py-3 font-medium">Items</th>
-                <th className="px-5 py-3 font-medium">Status</th>
-                <th className="px-5 py-3 font-medium">Location</th>
-                <th className="px-5 py-3 font-medium">Date</th>
-                <th className="px-5 py-3 font-medium"></th>
-              </tr>
-            </thead>
-            <tbody>
-              {parcels.map((parcel) => (
-                <tr
-                  key={parcel.id}
-                  className="border-b border-secondary/10 last:border-0"
-                >
-                  <td className="px-5 py-4 font-medium text-primary">
-                    {parcel.id}
-                  </td>
-                  <td className="px-5 py-4 text-secondary">{parcel.items}</td>
-                  <td className="px-5 py-4">
-                    <span
-                      className={cn(
-                        "rounded-full px-3 py-1 text-xs font-medium",
-                        statusStyles[parcel.status],
-                      )}
-                    >
-                      {parcel.status}
-                    </span>
-                  </td>
-                  <td className="px-5 py-4 text-secondary">
-                    {parcel.location}
-                  </td>
-                  <td className="px-5 py-4 text-secondary">{parcel.date}</td>
-                  <td className="px-5 py-4 text-right">
-                    <Link
-                      to={`/dashboard/parcel/${parcel.id}`}
-                      className="font-medium text-accent hover:underline"
-                    >
-                      View
-                    </Link>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
+      </TableContainer>
     </div>
+  );
+};
+
+const ParcelRow = ({ parcel }) => {
+  const statusBadge =
+    parcel.status === "Delivered"
+      ? "bg-green-100 text-green-600"
+      : parcel.status === "Arrived"
+        ? "bg-blue-100 text-blue-600"
+        : parcel.status === "On the Way"
+          ? "bg-amber-100 text-amber-600"
+          : "bg-secondary/10 text-secondary";
+
+  const typeBadge =
+    parcel.type === "Sent"
+      ? "bg-blue-100 text-blue-600"
+      : "bg-purple-100 text-purple-600";
+
+  return (
+    <TableRow
+      gridCols="md:grid-cols-[1fr_1.2fr_1.2fr_0.9fr_0.8fr_1fr_1fr_0.6fr]"
+    >
+      {/* Tracking ID */}
+      <TableData label="Tracking ID">
+        <span className="font-medium text-primary">
+          {parcel.trackingId}
+        </span>
+      </TableData>
+
+      {/* Sender */}
+      <TableData label="Sender">
+        <span className="text-secondary">
+          {parcel.senderName}
+        </span>
+      </TableData>
+
+      {/* Receiver */}
+      <TableData label="Receiver">
+        <span className="text-secondary">
+          {parcel.receiverName}
+        </span>
+      </TableData>
+
+      {/* Item */}
+      <TableData label="Item">
+        <span className="text-secondary">
+          {parcel.itemType}
+        </span>
+      </TableData>
+
+      {/* Type */}
+      <TableData label="Type">
+        <span
+          className={`rounded-full px-3 py-1 text-xs font-medium ${typeBadge}`}
+        >
+          {parcel.type}
+        </span>
+      </TableData>
+
+      {/* Status */}
+      <TableData label="Status">
+        <span
+          className={`rounded-full px-3 py-1 text-xs font-medium ${statusBadge}`}
+        >
+          {parcel.status}
+        </span>
+      </TableData>
+
+      {/* Date */}
+      <TableData label="Date">
+        <span className="text-secondary">
+          {parcel.date}
+        </span>
+      </TableData>
+
+      {/* Action */}
+      <TableData label="Action" align="right">
+        <Link
+          to={`/dashboard/parcel/${parcel.trackingId}`}
+          className="font-medium text-accent hover:underline"
+        >
+          View
+        </Link>
+      </TableData>
+    </TableRow>
   );
 };
 
