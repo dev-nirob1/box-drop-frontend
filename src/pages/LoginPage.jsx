@@ -1,14 +1,29 @@
-import { FcGoogle } from "react-icons/fc";
 import { Link } from "react-router";
-
 import Heading from "../components/ui/Heading";
 import Paragraph from "../components/ui/Paragraph";
 import Input from "../components/ui/Input";
 import Button from "../components/ui/Button";
 import Label from "../components/ui/Label";
-import Divider from "../components/ui/Divider";
+import axios from "axios";
 
 const LoginPage = () => {
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    const phone = e.target.phone.value;
+    const password = e.target.password.value;
+
+    const loginInfo = { phone, password };
+    console.log(loginInfo);
+    const res = await axios.post(
+      "http://localhost:3000/api/auth/login",
+      loginInfo,
+      {
+        withCredentials: true,
+      },
+    );
+    console.log(res);
+  };
+
   return (
     <div className="w-full border border-secondary/30 rounded p-3 md:p-8">
       {/* Heading */}
@@ -21,16 +36,16 @@ const LoginPage = () => {
       </div>
 
       {/* Login Form */}
-      <form className="space-y-5">
+      <form onSubmit={handleLogin} className="space-y-5">
         {/* Email */}
         <div>
-          <Label htmlFor="email">Email Address</Label>
+          <Label htmlFor="email">Phone Number</Label>
 
           <Input
-            id="email"
-            type="email"
-            name="email"
-            placeholder="Enter your email"
+            id="phone"
+            type="number"
+            name="phone"
+            placeholder="Enter your Phone number"
           />
         </div>
 
@@ -51,18 +66,6 @@ const LoginPage = () => {
           Login
         </Button>
       </form>
-
-      {/* Divider */}
-      <Divider />
-
-      {/* Google Login */}
-      <Button
-        variant="secondary"
-        className="w-full border border-secondary/30 hover:border-secondary/30 hover:bg-secondary/3 text-secondary hover:text-primary"
-      >
-        <FcGoogle className="text-xl" />
-        Continue with Google
-      </Button>
 
       {/* Register */}
       <Paragraph className="mt-6 text-center text-sm">

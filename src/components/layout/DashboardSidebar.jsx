@@ -4,7 +4,7 @@ import { cn } from "../../utils/cn";
 import { useSidebar } from "../../hooks/useSidebar";
 import Heading from "../ui/Heading";
 
-const role = "user";
+const role = "admin";
 
 const userLinks = [{ to: "/dashboard", label: "My Parcels", icon: FiPackage }];
 const adminLinks = [
