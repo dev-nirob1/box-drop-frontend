@@ -13,7 +13,7 @@ const LoginPage = () => {
     const password = e.target.password.value;
 
     const loginInfo = { phone, password };
-    console.log(loginInfo);
+    // console.log(loginInfo);
     const res = await axios.post(
       "http://localhost:3000/api/auth/login",
       loginInfo,
@@ -21,7 +21,9 @@ const LoginPage = () => {
         withCredentials: true,
       },
     );
-    console.log(res);
+    if (res?.data?.user?.userId) {
+      alert(res?.data?.message);
+    }
   };
 
   return (

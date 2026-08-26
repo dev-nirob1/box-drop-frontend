@@ -1,5 +1,5 @@
 import { FcGoogle } from "react-icons/fc";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 
 import Heading from "../components/ui/Heading";
 import Paragraph from "../components/ui/Paragraph";
@@ -7,8 +7,26 @@ import Input from "../components/ui/Input";
 import Button from "../components/ui/Button";
 import Label from "../components/ui/Label";
 import Divider from "../components/ui/Divider";
+import axios from "axios";
 
 const RegisterPage = () => {
+
+  const navigate = useNavigate()
+  const handleRegister = async(e)=> {
+    e.preventDefault();
+    const name = e.target.name.value;
+    const phone = e.target.phone.value;
+    const password = e.target.password.value;
+    const userData = {name, phone, password};
+
+    const res = await axios.post("http://localhost:3000/api/users",
+      userData);
+      if(res.data.insertedId){
+        alert('User Created Successfully');
+        navigate('/login')
+      }
+      console.log(res);
+  }
   return (
     <div className="w-full rounded border border-secondary/30 p-3 md:p-8">
       {/* Heading */}
@@ -23,7 +41,7 @@ const RegisterPage = () => {
       </div>
 
       {/* Register Form */}
-      <form className="space-y-5">
+      <form onSubmit={handleRegister} className="space-y-5">
         {/* Name */}
         <div>
           <Label htmlFor="name">Full Name</Label>
@@ -38,13 +56,13 @@ const RegisterPage = () => {
 
         {/* Email */}
         <div>
-          <Label htmlFor="email">Email Address</Label>
+          <Label htmlFor="phone">Phone Number</Label>
 
           <Input
-            id="email"
-            type="email"
-            name="email"
-            placeholder="Enter your email"
+            id="phone"
+            type="number"
+            name="phone"
+            placeholder="Enter your phone number"
           />
         </div>
 
