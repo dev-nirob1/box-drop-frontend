@@ -7,7 +7,7 @@ import Label from "../components/ui/Label";
 import { useAuth } from "../hooks/useAuth";
 
 const LoginPage = () => {
-  const { login } = useAuth();
+  const { login, setUser } = useAuth();
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
@@ -21,6 +21,7 @@ const LoginPage = () => {
       const data = await login(loginInfo);
       if (data?.user?.userId) {
         alert(data.message);
+        setUser(data?.user);
         navigate("/");
       }
     } catch (error) {
