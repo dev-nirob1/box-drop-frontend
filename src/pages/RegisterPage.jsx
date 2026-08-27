@@ -1,32 +1,34 @@
 import { FcGoogle } from "react-icons/fc";
 import { Link, useNavigate } from "react-router";
-
 import Heading from "../components/ui/Heading";
 import Paragraph from "../components/ui/Paragraph";
 import Input from "../components/ui/Input";
 import Button from "../components/ui/Button";
 import Label from "../components/ui/Label";
 import Divider from "../components/ui/Divider";
-import axios from "axios";
+import { useAuth } from "../hooks/useAuth";
 
 const RegisterPage = () => {
+  const { register } = useAuth();
+  const navigate = useNavigate();
 
-  const navigate = useNavigate()
-  const handleRegister = async(e)=> {
+  const handleRegister = async (e) => {
     e.preventDefault();
     const name = e.target.name.value;
     const phone = e.target.phone.value;
     const password = e.target.password.value;
-    const userData = {name, phone, password};
+    const userData = { name, phone, password };
 
-    const res = await axios.post("http://localhost:3000/api/users",
-      userData);
-      if(res.data.insertedId){
-        alert('User Created Successfully');
-        navigate('/login')
+    try {
+      const data = await register(userData);
+      if (data?.insertedId) {
+        alert(data?.message);
+        navigate("/login");
       }
-      console.log(res);
-  }
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <div className="w-full rounded border border-secondary/30 p-3 md:p-8">
       {/* Heading */}
@@ -35,9 +37,7 @@ const RegisterPage = () => {
           Create an Account
         </Heading>
 
-        <Paragraph>
-          Register to start sending parcels with BoxDrop.
-        </Paragraph>
+        <Paragraph>Register to start sending parcels with BoxDrop.</Paragraph>
       </div>
 
       {/* Register Form */}
@@ -112,10 +112,7 @@ const RegisterPage = () => {
       {/* Login */}
       <Paragraph className="mt-6 text-center text-sm">
         Already have an account?{" "}
-        <Link
-          to="/login"
-          className="font-medium text-accent hover:underline"
-        >
+        <Link to="/login" className="font-medium text-accent hover:underline">
           Login
         </Link>
       </Paragraph>

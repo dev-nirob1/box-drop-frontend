@@ -1,12 +1,15 @@
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import Heading from "../components/ui/Heading";
 import Paragraph from "../components/ui/Paragraph";
 import Input from "../components/ui/Input";
 import Button from "../components/ui/Button";
 import Label from "../components/ui/Label";
-import axios from "axios";
+import { useAuth } from "../hooks/useAuth";
 
 const LoginPage = () => {
+  const { login } = useAuth();
+  const navigate = useNavigate();
+
   const handleLogin = async (e) => {
     e.preventDefault();
     const phone = e.target.phone.value;
@@ -14,15 +17,14 @@ const LoginPage = () => {
 
     const loginInfo = { phone, password };
     // console.log(loginInfo);
-    const res = await axios.post(
-      "http://localhost:3000/api/auth/login",
-      loginInfo,
-      {
-        withCredentials: true,
-      },
-    );
-    if (res?.data?.user?.userId) {
-      alert(res?.data?.message);
+    try {
+      const data = await login(loginInfo);
+      if (data?.user?.userId) {
+        alert(data.message);
+        navigate("/");
+      }
+    } catch (error) {
+      console.log(error);
     }
   };
 
