@@ -9,9 +9,10 @@ const DashboardLayout = () => {
       <div className="flex min-h-screen">
         <DashboardSidebar />
 
-        <div className="flex-1 flex flex-col">
+        <div className="flex min-w-0 flex-1 flex-col lg:pl-64">
           <DashboardTopbar />
-          <main className="flex-1 lg:pl-70 p-6">
+
+          <main className="flex-1 p-6">
             <Outlet />
           </main>
         </div>
@@ -19,5 +20,4 @@ const DashboardLayout = () => {
     </SidebarProvider>
   );
 };
-
 export default DashboardLayout;

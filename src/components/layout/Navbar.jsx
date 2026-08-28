@@ -72,7 +72,7 @@ const Navbar = () => {
                   <button
                     type="button"
                     onClick={() => setIsProfileOpen((prev) => !prev)}
-                    className="flex h-10 w-10 items-center justify-center rounded-full bg-accent/10 text-accent cursor-pointer lg:bg-accent/10"
+                    className="flex h-10 w-10 items-center justify-center rounded-full bg-accent/10 text-accent cursor-pointer"
                   >
                     <FiUser className="text-lg" />
                   </button>

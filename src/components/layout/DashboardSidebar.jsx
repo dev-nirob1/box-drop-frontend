@@ -1,12 +1,12 @@
-import { NavLink } from "react-router";
+import { Link, NavLink } from "react-router";
 import { FiPackage, FiGrid, FiUsers, FiLogOut, FiX } from "react-icons/fi";
 import { cn } from "../../utils/cn";
 import { useSidebar } from "../../hooks/useSidebar";
-import Heading from "../ui/Heading";
-
-const role = "admin";
+import Image from "../ui/Image";
+import { useAuth } from "../../hooks/useAuth";
 
 const userLinks = [{ to: "/dashboard", label: "My Parcels", icon: FiPackage }];
+
 const adminLinks = [
   { to: "/admin", label: "All Parcels", icon: FiGrid },
   { to: "/admin/new", label: "Add Parcel", icon: FiGrid },
@@ -15,7 +15,8 @@ const adminLinks = [
 
 const DashboardSidebar = () => {
   const { isSidebarOpen, closeSidebar } = useSidebar();
-  const links = role === "admin" ? adminLinks : userLinks;
+  const {user, logout} = useAuth()
+  const links = user?.role === "admin" ? adminLinks : userLinks;
 
   return (
     <>
@@ -30,14 +31,17 @@ const DashboardSidebar = () => {
       <aside
         className={cn(
           "fixed top-0 left-0 z-50 flex h-screen w-64 flex-col border-r border-secondary/10 bg-white transition-transform duration-300 lg:translate-x-0",
-          isSidebarOpen ? "translate-x-0" : "-translate-x-full"
+          isSidebarOpen ? "translate-x-0" : "-translate-x-full",
         )}
       >
         <div className="flex items-center justify-between border-b border-secondary/10 px-6 py-4">
-          <Heading as={4}>
-            BoxDrop
-          </Heading>
-          <button onClick={closeSidebar} className="text-xl lg:hidden cursor-pointer">
+          <Link to="/">
+            <Image src="/images/nav-logo.png" alt="logo" />
+          </Link>
+          <button
+            onClick={closeSidebar}
+            className="text-xl lg:hidden cursor-pointer"
+          >
             <FiX />
           </button>
         </div>
@@ -54,7 +58,7 @@ const DashboardSidebar = () => {
                   "flex items-center gap-3 rounded-md px-3 py-2.5 text-sm font-medium transition-colors",
                   isActive
                     ? "bg-accent/10 text-accent"
-                    : "text-secondary hover:bg-secondary/5 hover:text-primary"
+                    : "text-secondary hover:bg-secondary/5 hover:text-primary",
                 )
               }
             >
@@ -66,6 +70,7 @@ const DashboardSidebar = () => {
 
         <div className="border-t border-secondary/10 px-3 py-4">
           <button
+          onClick={logout}
             type="button"
             className="flex w-full items-center gap-3 rounded-md px-3 py-2.5 text-sm font-medium text-secondary transition-colors hover:bg-secondary/5 hover:text-primary cursor-pointer"
           >
