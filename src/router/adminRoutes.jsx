@@ -3,9 +3,14 @@ import AdminAddParcel from "../pages/Admin/AdminAddParcel";
 import AdminDashboard from "../pages/Admin/AdminDashboard";
 import AdminParcelEdit from "../pages/Admin/AdminParcelEdit";
 import AdminUsers from "../pages/Admin/AdminUsers";
+import PrivateAdminRoute from "./PrivateAdminRoute";
 
 export const adminRoutes = {
-  element: <DashboardLayout />,
+  element: (
+    <PrivateAdminRoute>
+      <DashboardLayout />
+    </PrivateAdminRoute>
+  ),
   children: [
     {
       path: "/admin",

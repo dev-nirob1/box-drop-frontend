@@ -1,7 +1,7 @@
 import DashboardLayout from "../layout/DashboardLayout";
 import ParcelDetail from "../pages/Dashboard/ParcelDetail";
 import UserDashboard from "../pages/Dashboard/UserDashboard";
-import PrivateRoute from "./PrivateRoutes";
+import PrivateRoute from "./PrivateRoute";
 
 export const dashboardRoutes = {
   element: <PrivateRoute><DashboardLayout /></PrivateRoute>,

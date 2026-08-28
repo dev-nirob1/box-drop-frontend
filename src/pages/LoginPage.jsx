@@ -1,4 +1,4 @@
-import { Link, useLocation, useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router";
 import Heading from "../components/ui/Heading";
 import Paragraph from "../components/ui/Paragraph";
 import Input from "../components/ui/Input";
@@ -9,8 +9,6 @@ import { useAuth } from "../hooks/useAuth";
 const LoginPage = () => {
   const { login, setUser } = useAuth();
   const navigate = useNavigate();
-  const location = useLocation();
-  const from = location.state?.from?.pathname || "/";
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -24,7 +22,7 @@ const LoginPage = () => {
       if (data?.user?.userId) {
         alert(data.message);
         setUser(data?.user);
-        navigate(from, { replace: true });
+        navigate("/");
       }
     } catch (error) {
       console.log(error);
