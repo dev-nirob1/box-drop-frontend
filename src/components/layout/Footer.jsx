@@ -8,6 +8,7 @@ import {
 import Container from "../ui/Container";
 import Heading from "../ui/Heading";
 import Paragraph from "../ui/Paragraph";
+import Image from "../ui/Image";
 
 const quickLinks = [
   { href: "/", label: "Home" },
@@ -32,12 +33,10 @@ const socialLinks = [
 const Footer = () => {
   return (
     <footer className="bg-primary text-white pt-16">
-      <Container className="grid md:grid-cols-5 gap-10">
+      <Container className="grid md:grid-cols-2 lg:grid-cols-5 gap-10">
         {/* Brand */}
-        <div className="md:col-span-2">
-          <Heading as={4} className="text-white">
-            BoxDrop
-          </Heading>
+        <div className="lg:col-span-2">
+          <Image className="h-20 w-auto" src="/images/logo-footer.png" alt="logo" />
           <Paragraph className="my-5 text-white/60 max-w-sm">
             Reliable parcel tracking and delivery management, built for speed
             and transparency.
@@ -110,7 +109,7 @@ const Footer = () => {
       </Container>
 
       <div className="border-t border-white/10 mt-12">
-        <Container className="!py-6 flex flex-col md:flex-row justify-between items-center gap-3">
+        <Container className="py-6! flex flex-col md:flex-row justify-between items-center gap-3">
           <Paragraph className="text-white/50 text-sm">
             © {new Date().getFullYear()} BoxDrop. All rights reserved.
           </Paragraph>
