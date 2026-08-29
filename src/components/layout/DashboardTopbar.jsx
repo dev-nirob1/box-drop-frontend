@@ -6,7 +6,7 @@ import { useAuth } from "../../hooks/useAuth";
 const DashboardTopbar = () => {
   const { toggleSidebar } = useSidebar();
   const { user, logout } = useAuth();
-console.log(user)
+// console.log(user)
   return (
     <header className="flex items-center justify-between border-b border-secondary/10 bg-white px-4 py-4 lg:px-6">
       {/* Hamburger + page title */}
