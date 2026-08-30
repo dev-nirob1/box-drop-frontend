@@ -1,4 +1,4 @@
-export const itemTypes = [
+export const parcelTypes = [
     {
         label: "Document",
         value: "document",

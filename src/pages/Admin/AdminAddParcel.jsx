@@ -1,4 +1,5 @@
 import { useState } from "react";
+
 import { Link } from "react-router";
 import { FiArrowLeft } from "react-icons/fi";
 
@@ -7,25 +8,70 @@ import Paragraph from "../../components/ui/Paragraph";
 import Label from "../../components/ui/Label";
 import Input from "../../components/ui/Input";
 import Button from "../../components/ui/Button";
-import { itemTypes, paymentOptions } from "../../utils/data";
+
+import { parcelTypes, paymentOptions } from "../../utils/data";
+
 import SenderForm from "../../components/widget/SenderForm";
 import RecieverForm from "../../components/widget/RecieverForm";
 import ParcelDetailForm from "../../components/widget/ParcelDetailForm";
 import PaymentType from "../../components/widget/PaymentType";
 
 const AdminAddParcel = () => {
-  const [itemType, setItemType] = useState("document");
-  const [weight, setWeight] = useState("");
-  const [paymentType, setPaymentType] = useState("cod");
+  const [selectedItem, setSelectedItem] = useState("");
+  const [weight, setWeight] = useState(null);
+  const [paymentType, setPaymentType] = useState(null);
+  const [codAmount, setCodAmount] = useState(null);
 
-  const selectedItem = itemTypes.find((item) => item.value === itemType);
+  const isOther = selectedItem === "other";
 
-  const isOther = itemType === "other";
+  const selectedParcel = parcelTypes.find(
+    (parcel) => parcel.value === selectedItem
+  );
 
-  const otherCharge =
-    isOther && weight ? (Number(weight) <= 20 ? 150 : Number(weight) * 8) : 0;
+  // Delivery Charge
+  const deliveryCharge = isOther
+    ? Number(weight) <= 20
+      ? 150
+      : 150 + (Number(weight) - 20) * 8
+    : selectedParcel?.baseRate || 0;
 
-  const estimatedCost = isOther ? otherCharge : selectedItem?.baseRate || 0;
+  // Total Cost = Delivery Charge + COD Amount
+  const totalCost =
+    deliveryCharge + (paymentType === "cod" ? Number(codAmount) || 0 : 0);
+
+  const handleAddParcel = (e) => {
+    e.preventDefault();
+
+    const target = e.target;
+
+    const senderName = target.senderName.value;
+    const senderPhone = target.senderPhone.value;
+    const receiverName = target.receiverName.value;
+    const receiverPhone = target.receiverPhone.value;
+    const from = target.from.value;
+    const deliveryAddress = target.deliveryAddress.value;
+    const description = target.itemDescription.value;
+
+    const parcelDetails = {
+      senderName,
+      senderPhone,
+      receiverName,
+      receiverPhone,
+      from,
+      deliveryAddress,
+      description,
+      selectedItem,
+      weight: isOther ? Number(weight) : null,
+      deliveryCharge,
+      paymentType,
+      codAmount: paymentType === "cod" ? Number(codAmount) || 0 : 0,
+      totalCost,
+      status: "Booked",
+      bookingDate: new Date(),
+    };
+
+    console.log(parcelDetails);
+  };
 
   return (
     <div>
@@ -38,7 +84,6 @@ const AdminAddParcel = () => {
         Back to All Parcels
       </Link>
 
-      {/*todo: make reusable Heading */}
       <div className="mb-6">
         <Heading as={3}>Add New Parcel</Heading>
 
@@ -47,10 +92,11 @@ const AdminAddParcel = () => {
         </Paragraph>
       </div>
 
-      <form className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {/* =================================
-            COLUMN 1 — SENDER
-        ================================= */}
+      <form
+        onSubmit={handleAddParcel}
+        className="grid gap-6 md:grid-cols-2 lg:grid-cols-3"
+      >
+        {/* Sender */}
         <div className="rounded-md border border-secondary/10 bg-white p-6">
           <Heading as={5} className="mb-5">
             Sender Information
@@ -59,11 +105,9 @@ const AdminAddParcel = () => {
           <SenderForm />
         </div>
 
-        {/* =================================
-            COLUMN 2 — RECEIVER + PARCEL
-        ================================= */}
+        {/* Receiver + Parcel */}
         <div className="space-y-6">
-          {/* Receiver Information */}
+          {/* Receiver */}
           <div className="rounded-md border border-secondary/10 bg-white p-6">
             <Heading as={5} className="mb-5">
               Receiver Information
@@ -79,19 +123,17 @@ const AdminAddParcel = () => {
             </Heading>
 
             <ParcelDetailForm
-              itemType={itemType}
-              setItemType={setItemType}
+              selectedItem={selectedItem}
+              setSelectedItem={setSelectedItem}
               weight={weight}
               setWeight={setWeight}
               isOther={isOther}
-              itemTypes={itemTypes}
+              parcelTypes={parcelTypes}
             />
           </div>
         </div>
 
-        {/* =================================
-            COLUMN 3 — PAYMENT + COST
-        ================================= */}
+        {/* Payment + Cost */}
         <div>
           <div className="rounded-md border border-secondary/10 bg-white p-6 lg:sticky lg:top-6">
             <Heading as={5} className="mb-5">
@@ -120,6 +162,8 @@ const AdminAddParcel = () => {
                     name="codAmount"
                     type="number"
                     min="0"
+                    value={codAmount || ""}
+                    onChange={(e) => setCodAmount(e.target.value)}
                     placeholder="Enter amount"
                   />
                 </div>
@@ -127,14 +171,16 @@ const AdminAddParcel = () => {
 
               {/* Cost Breakdown */}
               <div className="space-y-3 border-t border-secondary/10 pt-4">
+                {/* Item Type */}
                 <div className="flex items-center justify-between text-sm">
                   <span className="text-secondary">Item Type</span>
 
                   <span className="font-medium text-primary">
-                    {selectedItem?.label}
+                    {selectedParcel?.label || "-"}
                   </span>
                 </div>
 
+                {/* Weight */}
                 {isOther && weight && (
                   <div className="flex items-center justify-between text-sm">
                     <span className="text-secondary">Weight</span>
@@ -145,26 +191,42 @@ const AdminAddParcel = () => {
                   </div>
                 )}
 
+                {/* Delivery Charge */}
                 <div className="flex items-center justify-between text-sm">
                   <span className="text-secondary">Delivery Charge</span>
 
                   <span className="font-medium text-primary">
-                    ৳{estimatedCost}
+                    ৳{deliveryCharge}
                   </span>
                 </div>
 
+                {/* COD Amount */}
+                {paymentType === "cod" && (
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="text-secondary">COD Amount</span>
+
+                    <span className="font-medium text-primary">
+                      ৳{codAmount || 0}
+                    </span>
+                  </div>
+                )}
+
                 {/* Total */}
                 <div className="flex items-center justify-between border-t border-secondary/10 pt-4">
-                  <Label>Estimated Cost</Label>
+                  <Label>Total Cost</Label>
 
                   <Heading as={4} className="mb-0 text-accent">
-                    ৳{estimatedCost}
+                    ৳{totalCost}
                   </Heading>
                 </div>
               </div>
 
               {/* Submit */}
-              <Button type="submit" variant="primary" className="w-full">
+              <Button
+                type="submit"
+                variant="primary"
+                className="w-full"
+              >
                 Create Parcel
               </Button>
             </div>
