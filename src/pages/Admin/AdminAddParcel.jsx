@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { FiArrowLeft } from "react-icons/fi";
 
 import Heading from "../../components/ui/Heading";
@@ -15,8 +15,10 @@ import SenderForm from "../../components/widget/SenderForm";
 import RecieverForm from "../../components/widget/RecieverForm";
 import ParcelDetailForm from "../../components/widget/ParcelDetailForm";
 import PaymentType from "../../components/widget/PaymentType";
+import axios from "axios";
 
 const AdminAddParcel = () => {
+  const navigate = useNavigate();
   const [selectedItem, setSelectedItem] = useState("");
   const [weight, setWeight] = useState(null);
   const [paymentType, setPaymentType] = useState(null);
@@ -25,7 +27,7 @@ const AdminAddParcel = () => {
   const isOther = selectedItem === "other";
 
   const selectedParcel = parcelTypes.find(
-    (parcel) => parcel.value === selectedItem
+    (parcel) => parcel.value === selectedItem,
   );
 
   // Delivery Charge
@@ -39,7 +41,7 @@ const AdminAddParcel = () => {
   const totalCost =
     deliveryCharge + (paymentType === "cod" ? Number(codAmount) || 0 : 0);
 
-  const handleAddParcel = (e) => {
+  const handleAddParcel = async (e) => {
     e.preventDefault();
 
     const target = e.target;
@@ -70,7 +72,23 @@ const AdminAddParcel = () => {
       bookingDate: new Date(),
     };
 
-    console.log(parcelDetails);
+    try {
+      const res = await axios.post(
+        "http://localhost:3000/api/parcels",
+        parcelDetails,
+        {
+          withCredentials: true,
+        },
+      );
+
+      if (res?.data?.parcelId) {
+        alert("Parcel created successfully");
+        navigate("/admin");
+      }
+    } catch (error) {
+      console.log(error);
+      alert("Failed to create parcel");
+    }
   };
 
   return (
@@ -222,11 +240,7 @@ const AdminAddParcel = () => {
               </div>
 
               {/* Submit */}
-              <Button
-                type="submit"
-                variant="primary"
-                className="w-full"
-              >
+              <Button type="submit" variant="primary" className="w-full">
                 Create Parcel
               </Button>
             </div>
