@@ -16,6 +16,8 @@ import TableContainer from "../../components/ui/TableContainer";
 import TableHeader from "../../components/ui/TableHeader";
 import TableRow from "../../components/ui/TableRow";
 import TableData from "../../components/ui/TableData";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 const stats = [
   { label: "Total Parcels", value: 48, icon: FiPackage },
@@ -24,56 +26,17 @@ const stats = [
   { label: "Delivered", value: 27, icon: FiCheckCircle },
 ];
 
-// dummy data,
-const parcels = [
-  {
-    trackingId: "BD10293",
-    senderName: "Nirob Hasan",
-    receiverName: "Ayesha Khatun",
-    itemDescription: "Laptop charger",
-    paymentType: "Cash on Delivery",
-    price: "৳450",
-    status: "In Transit",
-    deliveredDate: null,
-    date: "22 Aug, 2026",
-  },
-  {
-    trackingId: "BD10287",
-    senderName: "Rahim Uddin",
-    receiverName: "Nirob Hasan",
-    itemDescription: "Documents",
-    paymentType: "Prepaid",
-    price: "৳320",
-    status: "Delivered",
-    deliveredDate: "2026-08-10",
-    date: "20 Aug, 2026",
-  },
-  {
-    trackingId: "BD10251",
-    senderName: "Nirob Hasan",
-    receiverName: "Karim Sheikh",
-    itemDescription: "Poly bag parcel",
-    paymentType: "Cash on Delivery",
-    price: "৳280",
-    status: "Pending",
-    deliveredDate: null,
-    date: "18 Aug, 2026",
-  },
-  {
-    trackingId: "BD10244",
-    senderName: "Karim Sheikh",
-    receiverName: "Fatema Akter",
-    itemDescription: "Clothing",
-    paymentType: "Prepaid",
-    price: "৳550",
-    status: "Delivered",
-    deliveredDate: "2026-08-17",
-    date: "17 Aug, 2026",
-  },
-];
-
 const AdminDashboard = () => {
-
+  const [parcels, setParcels] = useState([]);
+  useEffect(() => {
+    const getParcelsData = async () => {
+      const res = await axios.get("http://localhost:3000/api/parcels", {
+        withCredentials: true,
+      });
+      setParcels(res?.data?.result);
+    };
+    getParcelsData();
+  }, []);
   return (
     <div>
       {/* Heading + Add Parcel */}
@@ -95,8 +58,8 @@ const AdminDashboard = () => {
 
       {/* Stats card */}
       <div className="mb-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        {stats.map((item) => (
-          <StatCard item={item} />
+        {stats.map((item, i) => (
+          <StatCard key={i} item={item} />
         ))}
       </div>
 
@@ -115,7 +78,7 @@ const AdminDashboard = () => {
             <div>Reciever</div>
             <div>Item</div>
             <div>Payment</div>
-            <div>Price</div>
+            <div>Cost</div>
             <div>Status</div>
             <div>Date</div>
             <div className="text-right">Action</div>
@@ -136,15 +99,15 @@ const AdminDashboard = () => {
               </TableData>
               <TableData label="Item">
                 {/* nextgen it ltd */}
-                <span>{parcel.itemDescription}</span>
+                <span>{parcel.selectedItem}</span>
               </TableData>
               <TableData label="Payment">
                 {/* nextgen it ltd */}
                 <span>{parcel.paymentType}</span>
               </TableData>
-              <TableData label="Price">
+              <TableData label="Cost">
                 {/* nextgen it ltd */}
-                <span>${parcel.price}</span>
+                <span>${parcel.totalCost}</span>
               </TableData>
               <TableData label="Status">
                 {/* nextgen it ltd */}
@@ -163,7 +126,9 @@ const AdminDashboard = () => {
               </TableData>
               <TableData label="Date">
                 {/* nextgen it ltd */}
-                <span>{parcel.date}</span>
+                <span>
+                  {new Date(parcel.bookingDate).toLocaleDateString("en-GB")}
+                </span>
               </TableData>
               <TableData label="Status">
                 {/* nextgen it ltd */}
@@ -180,7 +145,6 @@ const AdminDashboard = () => {
             </TableRow>
           ))}
         </TableContainer>
-
       </div>
     </div>
   );
