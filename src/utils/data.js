@@ -27,8 +27,8 @@ export const paymentOptions = [
     },
 ];
 export const statusOptions = [
-  "Received",
-  "On the Way",
-  "Arrived",
-  "Delivered",
+    "Booked",
+    "On the Way",
+    "Ready to Deliver",
+    "Delivered",
 ];
