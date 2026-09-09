@@ -1,8 +1,7 @@
+// gridCols = "md:grid-cols-[1fr_1.2fr_1.2fr_1fr_1fr_0.8fr_1fr_0.8fr_0.8fr]",
 const TableHeader = ({
   children,
-  // gridCols = "md:grid-cols-[1fr_1.2fr_1.2fr_1fr_1fr_0.8fr_1fr_0.8fr_0.8fr]",
-  gridCols = "md:grid-cols-[1fr_1fr_1fr_1fr_1fr_1fr_1fr_1fr_0.8fr]",
-
+  gridCols,
   className = "",
 }) => {
   return (
