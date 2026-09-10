@@ -1,4 +1,6 @@
+import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router";
+import axios from "axios";
 
 import { FiArrowLeft } from "react-icons/fi";
 
@@ -6,62 +8,104 @@ import Heading from "../../components/ui/Heading";
 import Label from "../../components/ui/Label";
 import Span from "../../components/ui/Span";
 import Paragraph from "../../components/ui/Paragraph";
-
 import StatusTimeline from "../../components/widget/StatusTimeline";
 
-// Dummy data
-const parcel = {
-  trackingId: "BD10293",
-
-  type: "Sent",
-  status: "On the Way",
-
-  date: "22 Aug, 2026",
-  estimatedDelivery: "24 Aug, 2026",
-  destination: "Chattogram",
-
-  senderName: "Nirob Hasan",
-  senderPhone: "01712345678",
-  senderAddress: "House 22, Road 8, Dhaka",
-
-  receiverName: "Ayesha Khatun",
-  receiverPhone: "01898765432",
-  receiverAddress: "House 12, Road 5, Chattogram",
-
-  itemType: "Other",
-  itemDescription: "Laptop charger",
-  weight: "2.5 kg",
-
-  price: "৳450",
-  paymentType: "Cash on Delivery",
-  paymentStatus: "Pending",
-
-  timeline: [
-    {
-      label: "Received at Point",
-      date: "22 Aug, 2026",
-      completed: true,
-    },
-    {
-      label: "On the Way",
-      date: "22 Aug, 2026",
-      completed: true,
-    },
-    {
-      label: "Arrived",
-      date: null,
-      completed: false,
-    },
-    {
-      label: "Delivered",
-      date: null,
-      completed: false,
-    },
-  ],
-};
+import { statusOptions } from "../../utils/data";
 
 const ParcelDetail = () => {
   const { id } = useParams();
+
+  const [parcel, setParcel] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const getParcelDetails = async () => {
+      try {
+        const res = await axios.get(
+          `http://localhost:3000/api/user/parcels/${id}`,
+          {
+            withCredentials: true,
+          },
+        );
+
+        setParcel(res?.data?.result);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    getParcelDetails();
+  }, [id]);
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (!parcel) {
+    return <div>Parcel not found.</div>;
+  }
+
+  // --------------------------------
+  // Item type
+  // --------------------------------
+  const itemType =
+    parcel.selectedItem === "polybag"
+      ? "Poly Bag"
+      : parcel.selectedItem === "document"
+        ? "Document"
+        : "Other";
+
+  // --------------------------------
+  // Payment type
+  // --------------------------------
+  const paymentType =
+    parcel.paymentType === "cod" ? "Cash on Delivery" : "Prepaid";
+
+  // --------------------------------
+  // Payment status
+  // --------------------------------
+  const paymentStatus =
+    parcel.paymentType === "prepaid"
+      ? "Paid"
+      : parcel.status === "Delivered"
+        ? "Paid"
+        : "Unpaid";
+
+  // --------------------------------
+  // Parcel type
+  // --------------------------------
+  const type =
+    parcel.senderPhone === parcel.receiverPhone
+      ? "Sent"
+      : parcel.senderPhone
+        ? "Sent"
+        : "Received";
+
+  // --------------------------------
+  // Timeline
+  // --------------------------------
+  const timeline = statusOptions.map((status) => {
+    const history = parcel.statusHistory?.find(
+      (item) => item.status === status,
+    );
+
+    return {
+      label: status,
+      date: history?.updatedAt || history?.date || null,
+      completed: !!history,
+    };
+  });
+
+  // --------------------------------
+  // Date formatting
+  // --------------------------------
+  const bookingDate = new Date(parcel.bookingDate).toLocaleDateString("en-GB", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+  });
 
   return (
     <div>
@@ -85,11 +129,11 @@ const ParcelDetail = () => {
               <Span>Tracking ID</Span>
 
               <Heading as={4} className="mb-1">
-                {id}
+                {parcel.trackingId}
               </Heading>
 
               <Paragraph className="text-sm">
-                Parcel created on {parcel.date}
+                Parcel created on {bookingDate}
               </Paragraph>
             </div>
 
@@ -103,7 +147,7 @@ const ParcelDetail = () => {
                 </Heading>
 
                 <span className="rounded-full bg-primary/10 px-3 py-1 text-xs font-medium text-primary">
-                  {parcel.type}
+                  {type}
                 </span>
               </div>
 
@@ -115,6 +159,7 @@ const ParcelDetail = () => {
                   <div className="mt-3 space-y-3">
                     <div>
                       <Span>Name</Span>
+
                       <Label className="text-primary">
                         {parcel.senderName}
                       </Label>
@@ -122,6 +167,7 @@ const ParcelDetail = () => {
 
                     <div>
                       <Span>Phone</Span>
+
                       <Label className="text-primary">
                         {parcel.senderPhone}
                       </Label>
@@ -129,9 +175,8 @@ const ParcelDetail = () => {
 
                     <div>
                       <Span>Address</Span>
-                      <Label className="text-primary">
-                        {parcel.senderAddress}
-                      </Label>
+
+                      <Label className="text-primary">{parcel.from}</Label>
                     </div>
                   </div>
                 </div>
@@ -143,6 +188,7 @@ const ParcelDetail = () => {
                   <div className="mt-3 space-y-3">
                     <div>
                       <Span>Name</Span>
+
                       <Label className="text-primary">
                         {parcel.receiverName}
                       </Label>
@@ -150,6 +196,7 @@ const ParcelDetail = () => {
 
                     <div>
                       <Span>Phone</Span>
+
                       <Label className="text-primary">
                         {parcel.receiverPhone}
                       </Label>
@@ -157,28 +204,12 @@ const ParcelDetail = () => {
 
                     <div>
                       <Span>Address</Span>
+
                       <Label className="text-primary">
-                        {parcel.receiverAddress}
+                        {parcel.deliveryAddress}
                       </Label>
                     </div>
                   </div>
-                </div>
-              </div>
-
-              {/* Destination + Estimated Delivery */}
-              <div className="mt-5 grid gap-4 border-t border-secondary/10 pt-4 sm:grid-cols-2">
-                <div>
-                  <Span>Destination</Span>
-                  <Label className="text-primary">
-                    {parcel.destination}
-                  </Label>
-                </div>
-
-                <div>
-                  <Span>Estimated Delivery</Span>
-                  <Label className="text-primary">
-                    {parcel.estimatedDelivery}
-                  </Label>
                 </div>
               </div>
             </div>
@@ -194,22 +225,21 @@ const ParcelDetail = () => {
               <div className="grid gap-4 sm:grid-cols-2">
                 <div>
                   <Span>Item Type</Span>
-                  <Label className="text-primary">
-                    {parcel.itemType}
-                  </Label>
+
+                  <Label className="text-primary">{itemType}</Label>
                 </div>
 
                 <div>
                   <Span>Weight</Span>
-                  <Label className="text-primary">
-                    {parcel.weight}
-                  </Label>
+
+                  <Label className="text-primary">{parcel.weight} kg</Label>
                 </div>
 
                 <div className="sm:col-span-2">
                   <Span>Description</Span>
+
                   <Label className="text-primary">
-                    {parcel.itemDescription}
+                    {parcel.description || "No description provided"}
                   </Label>
                 </div>
               </div>
@@ -226,24 +256,31 @@ const ParcelDetail = () => {
               <div className="grid gap-4 sm:grid-cols-3">
                 <div>
                   <Span>Delivery Charge</Span>
+
                   <Label className="text-primary">
-                    {parcel.price}
+                    ৳{parcel.deliveryCharge}
                   </Label>
                 </div>
 
                 <div>
                   <Span>Payment Type</Span>
-                  <Label className="text-primary">
-                    {parcel.paymentType}
-                  </Label>
+
+                  <Label className="text-primary">{paymentType}</Label>
                 </div>
 
                 <div>
                   <Span>Payment Status</Span>
-                  <Label className="text-primary">
-                    {parcel.paymentStatus}
-                  </Label>
+
+                  <Label className="text-primary">{paymentStatus}</Label>
                 </div>
+
+                {parcel.paymentType === "cod" && (
+                  <div>
+                    <Span>COD Amount</Span>
+
+                    <Label className="text-primary">৳{parcel.codAmount}</Label>
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -264,7 +301,7 @@ const ParcelDetail = () => {
               </Paragraph>
             </div>
 
-            <StatusTimeline steps={parcel.timeline} />
+            <StatusTimeline steps={timeline} />
           </div>
         </div>
       </div>
