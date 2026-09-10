@@ -1,3 +1,6 @@
+import { useState } from "react";
+import { useNavigate } from "react-router";
+
 import Container from "../ui/Container";
 import Heading from "../ui/Heading";
 import Paragraph from "../ui/Paragraph";
@@ -11,6 +14,19 @@ const stats = [
 ];
 
 const Hero = () => {
+  const navigate = useNavigate();
+  const [trackingId, setTrackingId] = useState("");
+
+  const handleTrack = (e) => {
+    e.preventDefault();
+
+    const id = trackingId.trim();
+
+    if (!id) return;
+
+    navigate(`/track/${id}`);
+  };
+
   return (
     <section className="relative overflow-hidden">
       <div
@@ -19,6 +35,7 @@ const Hero = () => {
           backgroundImage: "url('/images/hero.avif')",
         }}
       />
+
       <div className="absolute inset-0 bg-gradient-to-r from-primary/80 to-transparent" />
 
       <Container className="relative z-10 pt-40 lg:pt-52 pb-16">
@@ -32,15 +49,18 @@ const Hero = () => {
         </Paragraph>
 
         <form
-          onSubmit={(e) => e.preventDefault()}
+          onSubmit={handleTrack}
           className="mt-8 max-w-lg bg-white rounded p-2 flex gap-2"
         >
           <Input
             type="text"
             name="trackingId"
+            value={trackingId}
+            onChange={(e) => setTrackingId(e.target.value)}
             placeholder="Enter tracking ID"
             className="flex-1 border-0 focus:ring-0"
           />
+
           <Button type="submit" variant="primary" className="shrink-0">
             Track Parcel
           </Button>
@@ -52,6 +72,7 @@ const Hero = () => {
               <Heading as={4} className="text-white">
                 {stat.value}
               </Heading>
+
               <Paragraph className="text-sm text-white/70">
                 {stat.label}
               </Paragraph>
