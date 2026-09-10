@@ -14,7 +14,6 @@ import {
 import Heading from "../../components/ui/Heading";
 import Paragraph from "../../components/ui/Paragraph";
 import Button from "../../components/ui/Button";
-import { statusOptions } from "../../utils/data";
 import StatCard from "../../components/widget/StatCard";
 import TableContainer from "../../components/ui/TableContainer";
 import TableHeader from "../../components/ui/TableHeader";
@@ -24,6 +23,7 @@ import TableData from "../../components/ui/TableData";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
+import Span from "../../components/ui/Span";
 
 const AdminDashboard = () => {
   const [parcels, setParcels] = useState([]);
@@ -174,53 +174,45 @@ const AdminDashboard = () => {
               key={parcel.trackingId}
             >
               <TableData label="Tracking ID" className="min-w-0">
-                <span className="block truncate" title={parcel.trackingId}>
+                <Span className="block truncate text-sm text-primary" title={parcel.trackingId}>
                   {parcel.trackingId}
-                </span>
+                </Span>
               </TableData>
 
               <TableData label="Sender">
-                <span>{parcel.senderName}</span>
+                <Span className="text-sm text-primary">{parcel.senderName}</Span>
               </TableData>
 
               <TableData label="Receiver">
-                <span>{parcel.receiverName}</span>
+                <Span className="text-sm text-primary">{parcel.receiverName}</Span>
               </TableData>
 
               <TableData label="Item">
-                <span>{parcel.selectedItem}</span>
+                <Span className="text-sm text-primary">{parcel.selectedItem}</Span>
               </TableData>
 
               <TableData label="Payment">
-                <span>{parcel.paymentType}</span>
+                <Span className="text-sm text-primary">{parcel.paymentType}</Span>
               </TableData>
 
               <TableData label="Cost">
-                <span>৳{parcel.totalCost}</span>
+                <Span className="text-sm text-primary">৳{parcel.totalCost}</Span>
               </TableData>
 
               <TableData label="Status">
-                <select
-                  value={parcel.status}
-                  className="rounded-md border border-secondary/20 bg-white px-2 py-1.5 text-xs font-medium text-primary focus:border-accent focus:outline-none"
-                  disabled
-                >
-                  {statusOptions.map((option) => (
-                    <option key={option} value={option}>
-                      {option}
-                    </option>
-                  ))}
-                </select>
+                <Span className="bg-accent/10 text-accent text-sm px-3 py-2 rounded-full">
+                  {parcel.status}
+                </Span>
               </TableData>
 
               <TableData label="Date">
-                <span>
+                <Span className="text-sm text-primary">
                   {new Date(parcel.bookingDate).toLocaleDateString("en-GB", {
                     day: "2-digit",
                     month: "short",
                     year: "numeric",
                   })}
-                </span>
+                </Span>
               </TableData>
 
               <TableData label="Action">
@@ -229,7 +221,7 @@ const AdminDashboard = () => {
                   <Link
                     to={`/admin/parcels/${parcel.trackingId}`}
                     title="View"
-                    className="rounded-md bg-accent/10 p-1.5 text-accent hover:bg-accent/20"
+                    className="rounded-md bg-blue-500/10 p-1.5 text-blue-500 hover:bg-blue-500/20"
                   >
                     <FiEye size={16} />
                   </Link>
@@ -246,7 +238,7 @@ const AdminDashboard = () => {
                   {/* Download */}
                   <button
                     title="Download"
-                    className="cursor-pointer rounded-md bg-accent/10 p-1.5 text-accent hover:bg-accent/20"
+                    className="cursor-pointer rounded-md bg-primary/10 p-1.5 text-primary hover:bg-primary/20"
                   >
                     <FiDownload size={16} />
                   </button>
