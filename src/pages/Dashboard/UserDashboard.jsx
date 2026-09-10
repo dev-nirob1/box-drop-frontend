@@ -1,5 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+
 import { Link } from "react-router";
+
+import axios from "axios";
 
 import Heading from "../../components/ui/Heading";
 import Paragraph from "../../components/ui/Paragraph";
@@ -9,55 +12,27 @@ import TableHeader from "../../components/ui/TableHeader";
 import TableRow from "../../components/ui/TableRow";
 import TableData from "../../components/ui/TableData";
 
-// Dummy data
-const parcels = [
-  {
-    trackingId: "BD10293",
-    senderName: "Nirob Hasan",
-    receiverName: "Ayesha Khatun",
-    itemType: "Other",
-    type: "Sent",
-    status: "On the Way",
-    date: "22 Aug, 2026",
-  },
-  {
-    trackingId: "BD10287",
-    senderName: "Ayesha Khatun",
-    receiverName: "Nirob Hasan",
-    itemType: "Poly Bag",
-    type: "Received",
-    status: "Delivered",
-    date: "20 Aug, 2026",
-  },
-  {
-    trackingId: "BD10251",
-    senderName: "Nirob Hasan",
-    receiverName: "Karim Sheikh",
-    itemType: "Document",
-    type: "Sent",
-    status: "Arrived",
-    date: "18 Aug, 2026",
-  },
-  {
-    trackingId: "BD10244",
-    senderName: "Sakib Ahmed",
-    receiverName: "Nirob Hasan",
-    itemType: "Other",
-    type: "Received",
-    status: "At Point",
-    date: "17 Aug, 2026",
-  },
-];
-
-const filterOptions = ["All", "Sent", "Received"];
-
 const UserDashboard = () => {
-  const [filter, setFilter] = useState("All");
+  const [parcels, setParcels] = useState([]);
 
-  const filteredParcels =
-    filter === "All"
-      ? parcels
-      : parcels.filter((parcel) => parcel.type === filter);
+  useEffect(() => {
+    const getUserParcels = async () => {
+      try {
+        const res = await axios.get(
+          "http://localhost:3000/api/user/parcels",
+          {
+            withCredentials: true,
+          },
+        );
+
+        setParcels(res?.data?.result || []);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    getUserParcels();
+  }, []);
 
   return (
     <div>
@@ -68,28 +43,6 @@ const UserDashboard = () => {
         <Paragraph>
           Track and manage all your sent and received parcels.
         </Paragraph>
-      </div>
-
-      {/* Filter Tabs */}
-      <div className="mb-5 flex gap-2">
-        {filterOptions.map((option) => {
-          const isActive = filter === option;
-
-          return (
-            <button
-              key={option}
-              type="button"
-              onClick={() => setFilter(option)}
-              className={
-                isActive
-                  ? "cursor-pointer rounded-md bg-primary px-4 py-2 text-sm font-medium text-white"
-                  : "cursor-pointer rounded-md border border-secondary/20 px-4 py-2 text-sm font-medium text-secondary hover:bg-secondary/5"
-              }
-            >
-              {option}
-            </button>
-          );
-        })}
       </div>
 
       {/* Parcel History */}
@@ -104,10 +57,10 @@ const UserDashboard = () => {
           <div>Type</div>
           <div>Status</div>
           <div>Date</div>
-          <div></div>
+         <div className="text-right">Action</div>
         </TableHeader>
 
-        {filteredParcels.map((parcel) => (
+        {parcels.map((parcel) => (
           <ParcelRow
             key={parcel.trackingId}
             parcel={parcel}
@@ -119,27 +72,41 @@ const UserDashboard = () => {
 };
 
 const ParcelRow = ({ parcel }) => {
+  const type =
+    parcel.senderPhone === parcel.receiverPhone
+      ? ""
+      : "Sent";
+
   const statusBadge =
     parcel.status === "Delivered"
       ? "bg-green-100 text-green-600"
-      : parcel.status === "Arrived"
+      : parcel.status === "Ready to Deliver"
         ? "bg-blue-100 text-blue-600"
         : parcel.status === "On the Way"
           ? "bg-amber-100 text-amber-600"
           : "bg-secondary/10 text-secondary";
 
   const typeBadge =
-    parcel.type === "Sent"
+    type === "Sent"
       ? "bg-blue-100 text-blue-600"
       : "bg-purple-100 text-purple-600";
+
+  const formattedDate = new Date(parcel.bookingDate).toLocaleDateString(
+    "en-GB",
+    {
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+    },
+  );
 
   return (
     <TableRow
       gridCols="md:grid-cols-[1fr_1.2fr_1.2fr_0.9fr_0.8fr_1fr_1fr_0.6fr]"
     >
       {/* Tracking ID */}
-      <TableData label="Tracking ID">
-        <span className="font-medium text-primary">
+      <TableData label="Tracking ID" className="min-w-0">
+        <span className="font-medium text-primary block truncate">
           {parcel.trackingId}
         </span>
       </TableData>
@@ -160,8 +127,8 @@ const ParcelRow = ({ parcel }) => {
 
       {/* Item */}
       <TableData label="Item">
-        <span className="text-secondary">
-          {parcel.itemType}
+        <span className="capitalize text-secondary">
+          {parcel.selectedItem}
         </span>
       </TableData>
 
@@ -170,7 +137,7 @@ const ParcelRow = ({ parcel }) => {
         <span
           className={`rounded-full px-3 py-1 text-xs font-medium ${typeBadge}`}
         >
-          {parcel.type}
+          {type}
         </span>
       </TableData>
 
@@ -186,7 +153,7 @@ const ParcelRow = ({ parcel }) => {
       {/* Date */}
       <TableData label="Date">
         <span className="text-secondary">
-          {parcel.date}
+          {formattedDate}
         </span>
       </TableData>
 

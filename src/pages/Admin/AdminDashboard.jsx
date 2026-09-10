@@ -174,29 +174,42 @@ const AdminDashboard = () => {
               key={parcel.trackingId}
             >
               <TableData label="Tracking ID" className="min-w-0">
-                <Span className="block truncate text-sm text-primary" title={parcel.trackingId}>
+                <Span
+                  className="block truncate text-sm text-primary"
+                  title={parcel.trackingId}
+                >
                   {parcel.trackingId}
                 </Span>
               </TableData>
 
               <TableData label="Sender">
-                <Span className="text-sm text-primary">{parcel.senderName}</Span>
+                <Span className="text-sm text-primary">
+                  {parcel.senderName}
+                </Span>
               </TableData>
 
               <TableData label="Receiver">
-                <Span className="text-sm text-primary">{parcel.receiverName}</Span>
+                <Span className="text-sm text-primary">
+                  {parcel.receiverName}
+                </Span>
               </TableData>
 
               <TableData label="Item">
-                <Span className="text-sm text-primary">{parcel.selectedItem}</Span>
+                <Span className="text-sm text-primary">
+                  {parcel.selectedItem}
+                </Span>
               </TableData>
 
               <TableData label="Payment">
-                <Span className="text-sm text-primary">{parcel.paymentType}</Span>
+                <Span className="text-sm text-primary">
+                  {parcel.paymentType}
+                </Span>
               </TableData>
 
               <TableData label="Cost">
-                <Span className="text-sm text-primary">৳{parcel.totalCost}</Span>
+                <Span className="text-sm text-primary">
+                  ৳{parcel.totalCost}
+                </Span>
               </TableData>
 
               <TableData label="Status">
