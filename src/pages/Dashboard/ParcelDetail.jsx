@@ -76,12 +76,7 @@ const ParcelDetail = () => {
   // --------------------------------
   // Parcel type
   // --------------------------------
-  const type =
-    parcel.senderPhone === parcel.receiverPhone
-      ? "Sent"
-      : parcel.senderPhone
-        ? "Sent"
-        : "Received";
+  const type = parcel.type;
 
   // --------------------------------
   // Timeline
@@ -101,11 +96,14 @@ const ParcelDetail = () => {
   // --------------------------------
   // Date formatting
   // --------------------------------
-  const bookingDate = new Date(parcel.bookingDate).toLocaleDateString("en-GB", {
-    day: "2-digit",
-    month: "short",
-    year: "numeric",
-  });
+  const bookingDate = new Date(parcel.bookingDate).toLocaleDateString(
+    "en-GB",
+    {
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+    },
+  );
 
   return (
     <div>
@@ -128,7 +126,7 @@ const ParcelDetail = () => {
             <div className="mb-6">
               <Span>Tracking ID</Span>
 
-              <Heading as={4} className="mb-1">
+              <Heading as={5} className="mb-1">
                 {parcel.trackingId}
               </Heading>
 
@@ -176,7 +174,9 @@ const ParcelDetail = () => {
                     <div>
                       <Span>Address</Span>
 
-                      <Label className="text-primary">{parcel.from}</Label>
+                      <Label className="text-primary">
+                        {parcel.from}
+                      </Label>
                     </div>
                   </div>
                 </div>
@@ -226,13 +226,17 @@ const ParcelDetail = () => {
                 <div>
                   <Span>Item Type</Span>
 
-                  <Label className="text-primary">{itemType}</Label>
+                  <Label className="text-primary">
+                    {itemType}
+                  </Label>
                 </div>
 
                 <div>
                   <Span>Weight</Span>
 
-                  <Label className="text-primary">{parcel.weight} kg</Label>
+                  <Label className="text-primary">
+                    {parcel.weight} kg
+                  </Label>
                 </div>
 
                 <div className="sm:col-span-2">
@@ -265,20 +269,26 @@ const ParcelDetail = () => {
                 <div>
                   <Span>Payment Type</Span>
 
-                  <Label className="text-primary">{paymentType}</Label>
+                  <Label className="text-primary">
+                    {paymentType}
+                  </Label>
                 </div>
 
                 <div>
                   <Span>Payment Status</Span>
 
-                  <Label className="text-primary">{paymentStatus}</Label>
+                  <Label className="text-primary">
+                    {paymentStatus}
+                  </Label>
                 </div>
 
                 {parcel.paymentType === "cod" && (
                   <div>
                     <Span>COD Amount</Span>
 
-                    <Label className="text-primary">৳{parcel.codAmount}</Label>
+                    <Label className="text-primary">
+                      ৳{parcel.codAmount}
+                    </Label>
                   </div>
                 )}
               </div>
