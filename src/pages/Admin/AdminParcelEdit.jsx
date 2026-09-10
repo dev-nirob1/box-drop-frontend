@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router";
 import axios from "axios";
-
 import { FiArrowLeft } from "react-icons/fi";
 
 import Heading from "../../components/ui/Heading";
@@ -9,13 +8,14 @@ import Label from "../../components/ui/Label";
 import Span from "../../components/ui/Span";
 import Button from "../../components/ui/Button";
 import StatusTimeline from "../../components/widget/StatusTimeline";
-
 import { statusOptions } from "../../utils/data";
+import Swal from "sweetalert2";
 
 const AdminParcelEdit = () => {
   const { id } = useParams();
 
   const [parcel, setParcel] = useState(null);
+  const [status, setStatus] = useState("");
 
   useEffect(() => {
     const getParcelDetails = async () => {
@@ -24,7 +24,10 @@ const AdminParcelEdit = () => {
           withCredentials: true,
         });
 
-        setParcel(res?.data?.result);
+        const data = res?.data?.result;
+
+        setParcel(data);
+        setStatus(data.status);
       } catch (error) {
         console.error(error);
       }
@@ -32,6 +35,44 @@ const AdminParcelEdit = () => {
 
     getParcelDetails();
   }, [id]);
+
+  const handleUpdate = async () => {
+    try {
+      const res = await axios.patch(
+        `http://localhost:3000/api/parcels/${id}`,
+        {
+          status,
+        },
+        {
+          withCredentials: true,
+        },
+      );
+
+      if (res?.data?.result?.modifiedCount > 0) {
+        const updatedRes = await axios.get(
+          `http://localhost:3000/api/parcels/${id}`,
+          {
+            withCredentials: true,
+          },
+        );
+
+        const updatedParcel = updatedRes?.data?.result;
+
+        setParcel(updatedParcel);
+        setStatus(updatedParcel.status);
+        Swal.fire({
+          title: "Updated!",
+          text: "Parcel status updated successfully.",
+          icon: "success",
+          timer: 1500,
+          showConfirmButton: false,
+        });
+        
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   if (!parcel) return null;
 
@@ -61,6 +102,7 @@ const AdminParcelEdit = () => {
       {/* Heading */}
       <div className="mb-6">
         <Heading as={3}>Parcel Details</Heading>
+
         <p className="mt-1 text-sm text-secondary">
           View parcel information, delivery details and tracking status.
         </p>
@@ -126,6 +168,7 @@ const AdminParcelEdit = () => {
           <div className="rounded-md border border-secondary/10 bg-white p-5">
             <div className="mb-5">
               <Span>Tracking ID</Span>
+
               <Heading as={5} className="mb-0 mt-1">
                 {parcel.trackingId}
               </Heading>
@@ -188,6 +231,7 @@ const AdminParcelEdit = () => {
 
                 <div>
                   <Span>Current Status</Span>
+
                   <div className="mt-1">
                     <span className="inline-flex rounded-full bg-amber-100 px-3 py-1 text-xs font-medium text-amber-600">
                       {parcel.status}
@@ -223,7 +267,8 @@ const AdminParcelEdit = () => {
                 <select
                   id="status"
                   name="status"
-                  defaultValue={parcel.status}
+                  value={status}
+                  onChange={(e) => setStatus(e.target.value)}
                   className="w-full rounded-md border border-secondary/30 px-4 py-3 text-primary focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/40"
                 >
                   {statusOptions.map((option) => (
@@ -234,7 +279,12 @@ const AdminParcelEdit = () => {
                 </select>
               </div>
 
-              <Button type="submit" variant="primary" className="w-full">
+              <Button
+                type="button"
+                variant="primary"
+                className="w-full"
+                onClick={handleUpdate}
+              >
                 Save Changes
               </Button>
             </div>

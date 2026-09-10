@@ -35,13 +35,19 @@ const StatusTimeline = ({ steps }) => {
             {/* Content */}
             <div className="pt-1">
               <Label
-                className={
-                  step.completed ? "text-primary" : "text-secondary"
-                }
+                className={step.completed ? "text-primary" : "text-secondary"}
               >
                 {step.label}
               </Label>
-              {step.date && <Span className="block mt-0.5">{step.date}</Span>}
+              {step.date && (
+                <Span className="mt-0.5 block">
+                  {new Date(step.date).toLocaleDateString("en-GB", {
+                    day: "2-digit",
+                    month: "short",
+                    year: "numeric",
+                  })}
+                </Span>
+              )}{" "}
             </div>
           </div>
         );
