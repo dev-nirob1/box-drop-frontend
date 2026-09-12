@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { FiEye, FiEyeOff } from "react-icons/fi";
 import { Link, useNavigate } from "react-router";
-import Heading from "../../components/ui/Heading";
 import Paragraph from "../../components/ui/Paragraph";
 import Input from "../../components/ui/Input";
 import Button from "../../components/ui/Button";
@@ -9,6 +8,7 @@ import Label from "../../components/ui/Label";
 import ErrorText from "../../components/ui/ErrorText";
 import { useAuth } from "../../hooks/useAuth";
 import Swal from "sweetalert2";
+import PageHeader from "../../components/widget/PageHeader";
 
 const PHONE_REGEX = /^01[3-9]\d{8}$/;
 const PASSWORD_REGEX =
@@ -20,6 +20,7 @@ const RegisterPage = () => {
 
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
+  const [submitting, setSubmitting] = useState(false);
 
   const handleRegister = async (e) => {
     e.preventDefault();
@@ -50,6 +51,7 @@ const RegisterPage = () => {
 
     const userData = { name, phone, password };
 
+    setSubmitting(true);
     try {
       const data = await register(userData);
       if (data?.insertedId) {
@@ -64,18 +66,19 @@ const RegisterPage = () => {
       }
     } catch (err) {
       setError(err?.response?.data?.message || "Something went wrong");
+    } finally {
+      setSubmitting(false);
     }
   };
 
   return (
     <div className="w-full rounded border border-secondary/30 p-3 md:p-8">
-      {/* Heading */}
-      <div className="mb-8">
-        <Heading as={3} className="mb-1">
-          Create an Account
-        </Heading>
-        <Paragraph>Register to start sending parcels with BoxDrop.</Paragraph>
-      </div>
+      {/* page Heading */}
+      <PageHeader
+        title="Create an Account"
+        description="Register to start sending parcels with BoxDrop."
+        className="mb-8"
+      />
 
       {/* Register Form */}
       <form onSubmit={handleRegister} className="space-y-5">
@@ -136,8 +139,8 @@ const RegisterPage = () => {
         {error && <ErrorText>{error}</ErrorText>}
 
         {/* Register Button */}
-        <Button type="submit" className="w-full">
-          Create Account
+        <Button type="submit" className="w-full" disabled={submitting}>
+          {submitting ? "Creating account..." : "Create Account"}
         </Button>
       </form>
 

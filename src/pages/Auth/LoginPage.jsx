@@ -2,13 +2,13 @@ import { useState } from "react";
 import { FiEye, FiEyeOff } from "react-icons/fi";
 import { Link, useNavigate } from "react-router";
 import Swal from "sweetalert2";
-import Heading from "../../components/ui/Heading";
 import Paragraph from "../../components/ui/Paragraph";
 import Input from "../../components/ui/Input";
 import Button from "../../components/ui/Button";
 import Label from "../../components/ui/Label";
 import ErrorText from "../../components/ui/ErrorText";
 import { useAuth } from "../../hooks/useAuth";
+import PageHeader from "../../components/widget/PageHeader";
 
 const LoginPage = () => {
   const { login, setUser } = useAuth();
@@ -18,6 +18,7 @@ const LoginPage = () => {
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
+  // login form handle
   const handleLogin = async (e) => {
     e.preventDefault();
     setError("");
@@ -54,14 +55,13 @@ const LoginPage = () => {
 
   return (
     <div className="w-full border border-secondary/30 rounded p-3 md:p-8">
-      {/* Heading */}
-      <div className="mb-8">
-        <Heading as={3} className="mb-1">
-          Welcome Back
-        </Heading>
-        <Paragraph>Login to your account to continue.</Paragraph>
-      </div>
+      {/* page Heading */}
 
+      <PageHeader
+        title="Welcome Back"
+        description="Login to your account to continue."
+        className="mb-8"
+      />
       {/* Login Form */}
       <form onSubmit={handleLogin} className="space-y-5">
         {/* Phone */}
