@@ -6,6 +6,7 @@ import Heading from "../ui/Heading";
 import Paragraph from "../ui/Paragraph";
 import Button from "../ui/Button";
 import Input from "../ui/Input";
+import Swal from "sweetalert2";
 
 const stats = [
   { value: "10K+", label: "Parcels delivered" },
@@ -22,7 +23,15 @@ const Hero = () => {
 
     const id = trackingId.trim();
 
-    if (!id) return;
+    if (!id) {
+      Swal.fire({
+        icon: "warning",
+        title: "Tracking ID required",
+        text: "Please enter a tracking ID to continue.",
+        confirmButtonColor: "#FA4318",
+      });
+      return;
+    }
 
     navigate(`/track/${id}`);
   };
@@ -36,10 +45,10 @@ const Hero = () => {
         }}
       />
 
-      <div className="absolute inset-0 bg-gradient-to-r from-primary/80 to-transparent" />
+      <div className="absolute inset-0 bg-linear-to-r from-primary/80 to-transparent" />
 
       <Container className="relative z-10 pt-40 lg:pt-52 pb-16">
-        <Heading as={1} className="max-w-[500px] text-white uppercase">
+        <Heading as={1} className="max-w-125 text-white uppercase">
           Track your parcel, anytime, anywhere
         </Heading>
 
