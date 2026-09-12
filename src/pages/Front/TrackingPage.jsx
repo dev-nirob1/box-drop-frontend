@@ -2,15 +2,15 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import axios from "axios";
 
-import Container from "../components/ui/Container";
-import Paragraph from "../components/ui/Paragraph";
-import Button from "../components/ui/Button";
-import Span from "../components/ui/Span";
-import Label from "../components/ui/Label";
-import Input from "../components/ui/Input";
-import Heading from "../components/ui/Heading";
+import Container from "../../components/ui/Container";
+import Paragraph from "../../components/ui/Paragraph";
+import Button from "../../components/ui/Button";
+import Span from "../../components/ui/Span";
+import Label from "../../components/ui/Label";
+import Input from "../../components/ui/Input";
+import Heading from "../../components/ui/Heading";
 
-import StatusTimeline from "../components/widget/StatusTimeline";
+import StatusTimeline from "../../components/widget/StatusTimeline";
 
 const statusOptions = ["Booked", "On the Way", "Ready to Deliver", "Delivered"];
 

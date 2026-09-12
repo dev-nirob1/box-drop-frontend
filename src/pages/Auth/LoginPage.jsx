@@ -1,10 +1,10 @@
 import { Link, useNavigate } from "react-router";
-import Heading from "../components/ui/Heading";
-import Paragraph from "../components/ui/Paragraph";
-import Input from "../components/ui/Input";
-import Button from "../components/ui/Button";
-import Label from "../components/ui/Label";
-import { useAuth } from "../hooks/useAuth";
+import Heading from "../../components/ui/Heading";
+import Paragraph from "../../components/ui/Paragraph";
+import Input from "../../components/ui/Input";
+import Button from "../../components/ui/Button";
+import Label from "../../components/ui/Label";
+import { useAuth } from "../../hooks/useAuth";
 
 const LoginPage = () => {
   const { login, setUser } = useAuth();
