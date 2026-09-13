@@ -11,6 +11,7 @@ const SenderForm = () => {
           id="senderName"
           name="senderName"
           placeholder="Enter sender name"
+          required
         />
       </div>
 
@@ -22,13 +23,14 @@ const SenderForm = () => {
           name="senderPhone"
           type="tel"
           placeholder="Enter phone number"
+          required
         />
       </div>
 
       <div>
         <Label htmlFor="from">From</Label>
 
-        <Input id="from" name="from" placeholder="Enter sender's location" />
+        <Input id="from" name="from" placeholder="Enter sender's location" required />
       </div>
     </div>
   );

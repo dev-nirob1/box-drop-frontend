@@ -1,99 +1,42 @@
-import { useState } from "react";
-
-import { Link, useNavigate } from "react-router";
 import { FiArrowLeft } from "react-icons/fi";
-
+import { Link } from "react-router";
+import PageHeader from "../../components/widget/PageHeader";
+import SenderForm from "../../components/widget/SenderForm";
+import ReceiverForm from "../../components/widget/ReceiverForm";
+import Button from "../../components/ui/Button";
 import Heading from "../../components/ui/Heading";
-import Paragraph from "../../components/ui/Paragraph";
 import Label from "../../components/ui/Label";
 import Input from "../../components/ui/Input";
-import Button from "../../components/ui/Button";
-
-import { parcelTypes, paymentOptions } from "../../utils/data";
-
-import SenderForm from "../../components/widget/SenderForm";
-import RecieverForm from "../../components/widget/RecieverForm";
-import ParcelDetailForm from "../../components/widget/ParcelDetailForm";
-import PaymentType from "../../components/widget/PaymentType";
-import axios from "axios";
+import ParcelDetailsForm from "../../components/widget/ParcelDetailsForm";
 
 const AdminAddParcel = () => {
-  const navigate = useNavigate();
-  const [selectedItem, setSelectedItem] = useState("");
-  const [weight, setWeight] = useState(null);
-  const [paymentType, setPaymentType] = useState(null);
-  const [codAmount, setCodAmount] = useState(null);
-
-  const isOther = selectedItem === "other";
-
-  const selectedParcel = parcelTypes.find(
-    (parcel) => parcel.value === selectedItem,
-  );
-
-  // Delivery Charge
-  const deliveryCharge = isOther
-    ? Number(weight) <= 20
-      ? 150
-      : 150 + (Number(weight) - 20) * 8
-    : selectedParcel?.baseRate || 0;
-
-  // Total Cost = Delivery Charge + COD Amount
-  const totalCost =
-    deliveryCharge + (paymentType === "cod" ? Number(codAmount) || 0 : 0);
-
-  const handleAddParcel = async (e) => {
+  // add form function
+  const handleAddParcel = (e) => {
     e.preventDefault();
+    const form = e.target;
 
-    const target = e.target;
+    const senderName = form.senderName.value;
+    const senderPhone = form.senderPhone.value;
+    const from = form.from.value;
 
-    const senderName = target.senderName.value;
-    const senderPhone = target.senderPhone.value;
-    const receiverName = target.receiverName.value;
-    const receiverPhone = target.receiverPhone.value;
-    const from = target.from.value;
-    const deliveryAddress = target.deliveryAddress.value;
-    const description = target.itemDescription.value;
+    const receiverName = form.receiverName.value;
+    const receiverPhone = form.receiverPhone.value;
+    const deliveryAddress = form.deliveryAddress.value;
 
-    const parcelDetails = {
+    console.log("Form submitted", {
       senderName,
       senderPhone,
+      from,
       receiverName,
       receiverPhone,
-      from,
       deliveryAddress,
-      description,
-      selectedItem,
-      weight: isOther ? Number(weight) : null,
-      deliveryCharge,
-      paymentType,
-      codAmount: paymentType === "cod" ? Number(codAmount) || 0 : 0,
-      totalCost,
-      status: "Booked",
-      bookingDate: new Date(),
-    };
+    });
 
-    try {
-      const res = await axios.post(
-        "http://localhost:3000/api/parcels",
-        parcelDetails,
-        {
-          withCredentials: true,
-        },
-      );
-
-      if (res?.data?.parcelId) {
-        alert("Parcel created successfully");
-        navigate("/admin");
-      }
-    } catch (error) {
-      console.log(error);
-      alert("Failed to create parcel");
-    }
+    // Handle form submission logic here
   };
-
   return (
     <div>
-      {/* Back */}
+      {/* Back link */}
       <Link
         to="/admin"
         className="mb-6 inline-flex items-center gap-2 text-sm font-medium text-secondary hover:text-primary"
@@ -102,146 +45,88 @@ const AdminAddParcel = () => {
         Back to All Parcels
       </Link>
 
-      <div className="mb-6">
-        <Heading as={3}>Add New Parcel</Heading>
+      <PageHeader
+        className="mb-6"
+        title="Add New Parcel"
+        description="Fill in the details to add a new parcel to the system."
+      />
 
-        <Paragraph>
-          Enter parcel and customer details to create a new shipment.
-        </Paragraph>
-      </div>
-
-      <form
-        onSubmit={handleAddParcel}
-        className="grid gap-6 md:grid-cols-2 lg:grid-cols-3"
-      >
-        {/* Sender */}
-        <div className="rounded-md border border-secondary/10 bg-white p-6">
-          <Heading as={5} className="mb-5">
-            Sender Information
-          </Heading>
-
-          <SenderForm />
-        </div>
-
-        {/* Receiver + Parcel */}
-        <div className="space-y-6">
-          {/* Receiver */}
-          <div className="rounded-md border border-secondary/10 bg-white p-6">
-            <Heading as={5} className="mb-5">
-              Receiver Information
-            </Heading>
-
-            <RecieverForm />
+      {/* form here  */}
+      <form onSubmit={handleAddParcel}>
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {/* Sender & Receiver */}
+          <div className="border border-secondary/10 rounded p-4 h-fit">
+            <SenderForm />
+            <ReceiverForm />
           </div>
 
-          {/* Parcel Details */}
-          <div className="rounded-md border border-secondary/10 bg-white p-6">
-            <Heading as={5} className="mb-5">
-              Parcel Details
-            </Heading>
+          {/* Parcel + Payment */}
+          <div className="lg:col-span-2 grid lg:grid-cols-2 gap-4">
+            {/* Parcel Details */}
+            <ParcelDetailsForm />
 
-            <ParcelDetailForm
-              selectedItem={selectedItem}
-              setSelectedItem={setSelectedItem}
-              weight={weight}
-              setWeight={setWeight}
-              isOther={isOther}
-              parcelTypes={parcelTypes}
-            />
-          </div>
-        </div>
+            {/* Payment & Cost */}
+            <div className="border border-secondary/10 rounded p-4 h-fit">
+              <div className="space-y-4">
+                <Heading as={5}>Payment and Cost</Heading>
 
-        {/* Payment + Cost */}
-        <div>
-          <div className="rounded-md border border-secondary/10 bg-white p-6 lg:sticky lg:top-6">
-            <Heading as={5} className="mb-5">
-              Payment & Cost
-            </Heading>
-
-            <div className="space-y-5">
-              {/* Payment Type */}
-              <div>
-                <Label htmlFor="paymentType">Payment Type</Label>
-
-                <PaymentType
-                  paymentType={paymentType}
-                  setPaymentType={setPaymentType}
-                  paymentOptions={paymentOptions}
-                />
-              </div>
-
-              {/* COD Amount */}
-              {paymentType === "cod" && (
                 <div>
-                  <Label htmlFor="codAmount">COD Amount</Label>
+                  <Label htmlFor="paymentMethod">Payment Method</Label>
+                  <select
+                    id="paymentMethod"
+                    name="paymentMethod"
+                    defaultValue=""
+                    className="border border-secondary/10 py-3 px-3 focus:outline-none focus:ring-2 focus:ring-accent w-full rounded"
+                  >
+                    <option value="" disabled>
+                      Select Payment Method
+                    </option>
+                    <option value="cod">Cash on Delivery</option>
+                    <option value="prepaid">PrePaid</option>
+                  </select>
+                </div>
 
+                <div>
+                  <Label htmlFor="codAmount">COD Amount (৳)</Label>
                   <Input
                     id="codAmount"
                     name="codAmount"
                     type="number"
-                    min="0"
-                    value={codAmount || ""}
-                    onChange={(e) => setCodAmount(e.target.value)}
-                    placeholder="Enter amount"
+                    placeholder="Enter COD amount"
                   />
                 </div>
-              )}
 
-              {/* Cost Breakdown */}
-              <div className="space-y-3 border-t border-secondary/10 pt-4">
-                {/* Item Type */}
-                <div className="flex items-center justify-between text-sm">
-                  <span className="text-secondary">Item Type</span>
+                {/* Cart Summary */}
+                <div className="rounded-lg border border-secondary/10 p-4">
+                  <div className="space-y-3 text-sm">
+                    <div className="flex items-center justify-between">
+                      <span className="text-secondary">Delivery Charge</span>
+                      <span className="font-medium">৳150</span>
+                    </div>
 
-                  <span className="font-medium text-primary">
-                    {selectedParcel?.label || "-"}
-                  </span>
-                </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-secondary">COD Amount</span>
+                      <span className="font-medium">৳1,500</span>
+                    </div>
 
-                {/* Weight */}
-                {isOther && weight && (
-                  <div className="flex items-center justify-between text-sm">
-                    <span className="text-secondary">Weight</span>
+                    <div className="flex items-center justify-between">
+                      <span className="text-secondary">Payment Method</span>
+                      <span className="font-medium">Cash on Delivery</span>
+                    </div>
 
-                    <span className="font-medium text-primary">
-                      {weight} kg
-                    </span>
+                    <div className="border-t border-secondary/10 pt-3">
+                      <div className="flex items-center justify-between">
+                        <span className="font-semibold">Total Collection</span>
+                        <span className="text-lg font-bold text-accent">
+                          ৳1,650
+                        </span>
+                      </div>
+                    </div>
                   </div>
-                )}
-
-                {/* Delivery Charge */}
-                <div className="flex items-center justify-between text-sm">
-                  <span className="text-secondary">Delivery Charge</span>
-
-                  <span className="font-medium text-primary">
-                    ৳{deliveryCharge}
-                  </span>
-                </div>
-
-                {/* COD Amount */}
-                {paymentType === "cod" && (
-                  <div className="flex items-center justify-between text-sm">
-                    <span className="text-secondary">COD Amount</span>
-
-                    <span className="font-medium text-primary">
-                      ৳{codAmount || 0}
-                    </span>
-                  </div>
-                )}
-
-                {/* Total */}
-                <div className="flex items-center justify-between border-t border-secondary/10 pt-4">
-                  <Label>Total Cost</Label>
-
-                  <Heading as={4} className="mb-0 text-accent">
-                    ৳{totalCost}
-                  </Heading>
                 </div>
               </div>
-
-              {/* Submit */}
-              <Button type="submit" variant="primary" className="w-full">
-                Create Parcel
+              <Button type="submit" variant="primary" className="mt-4 w-full">
+                Add Parcel
               </Button>
             </div>
           </div>

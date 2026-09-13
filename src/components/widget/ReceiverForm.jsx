@@ -1,9 +1,9 @@
 import Label from "../ui/Label";
 import Input from "../ui/Input";
 
-const RecieverForm = () => {
+const ReceiverForm = () => {
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 mt-4">
       <div>
         <Label htmlFor="receiverName">Receiver Name</Label>
 
@@ -11,6 +11,7 @@ const RecieverForm = () => {
           id="receiverName"
           name="receiverName"
           placeholder="Enter receiver name"
+          required
         />
       </div>
 
@@ -22,6 +23,7 @@ const RecieverForm = () => {
           name="receiverPhone"
           type="tel"
           placeholder="Enter phone number"
+          required
         />
       </div>
 
@@ -32,10 +34,11 @@ const RecieverForm = () => {
           id="deliveryAddress"
           name="deliveryAddress"
           placeholder="Enter delivery address"
+          required
         />
       </div>
     </div>
   );
 };
 
-export default RecieverForm;
+export default ReceiverForm;

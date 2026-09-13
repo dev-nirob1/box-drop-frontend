@@ -1,18 +1,18 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
-import axios from "axios";
-
 import Container from "../../components/ui/Container";
-import Paragraph from "../../components/ui/Paragraph";
 import Button from "../../components/ui/Button";
 import Span from "../../components/ui/Span";
 import Label from "../../components/ui/Label";
 import Input from "../../components/ui/Input";
 import Heading from "../../components/ui/Heading";
+import Loader from "../../components/ui/Loader";
 
 import StatusTimeline from "../../components/widget/StatusTimeline";
-
-const statusOptions = ["Booked", "On the Way", "Ready to Deliver", "Delivered"];
+import PageHeader from "../../components/widget/PageHeader";
+import EmptyState from "../../components/widget/EmptyState";
+import { statusOptions } from "../../utils/data";
+import axios from "axios";
 
 const TrackResult = () => {
   const { trackingId } = useParams();
@@ -24,30 +24,31 @@ const TrackResult = () => {
   const [error, setError] = useState("");
 
   useEffect(() => {
-    const getTrackingData = async () => {
-      try {
-        setLoading(true);
-        setError("");
-
-        const res = await axios.get(
-          `http://localhost:3000/api/track/${trackingId}`,
-        );
-
-        setParcel(res.data.result);
-      } catch (error) {
-        setParcel(null);
-        setError(
-          error?.response?.data?.message ||
-            "Unable to retrieve parcel tracking information.",
-        );
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    getTrackingData();
+    setTrackingInput(trackingId || "");
   }, [trackingId]);
 
+useEffect(() => {
+  const getTrackingData = async () => {
+    try {
+      setLoading(true);
+      setError("");
+
+      const res = await axios.get(`http://localhost:3000/api/track/${trackingId}`);
+
+      setParcel(res.data.result);
+    } catch (error) {
+      setParcel(null);
+      setError(
+        error?.response?.data?.message ||
+          "Unable to retrieve parcel tracking information.",
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  getTrackingData();
+}, [trackingId]);
   const handleSearch = (e) => {
     e.preventDefault();
 
@@ -56,7 +57,6 @@ const TrackResult = () => {
     if (!value) return;
 
     navigate(`/track/${value}`);
-    setTrackingInput("");
   };
 
   const getTimelineSteps = () => {
@@ -79,14 +79,11 @@ const TrackResult = () => {
     <section className="pt-30 pb-16">
       <Container>
         <div className="mx-auto max-w-3xl">
-          <div className="text-center">
-            <Heading as="h1">Track Your Parcel</Heading>
-
-            <Paragraph className="mt-3">
-              Enter your tracking ID to check the latest delivery status of your
-              parcel.
-            </Paragraph>
-          </div>
+          <PageHeader
+            className="text-center"
+            title="Track Your Parcel"
+            description="Check the latest delivery status of your package at any time."
+          />
 
           {/* Search */}
           <form
@@ -108,28 +105,16 @@ const TrackResult = () => {
           </form>
 
           {/* Loading */}
-          {loading && (
-            <div className="mt-12 text-center">
-              <Paragraph>Loading tracking information...</Paragraph>
-            </div>
-          )}
+          {loading && <Loader />}
 
           {/* Error */}
           {!loading && error && (
-            <div className="mt-12 rounded border border-secondary/10 bg-white p-8 text-center">
-              <Heading as="h3">Parcel Not Found</Heading>
-
-              <Paragraph className="mt-2">{error}</Paragraph>
-
-              <Button
-                type="button"
-                variant="primary"
-                className="mt-5"
-                onClick={() => navigate("/")}
-              >
-                Back to Home
-              </Button>
-            </div>
+            <EmptyState
+              title="Parcel Not Found"
+              message={error}
+              buttonText="Back to Home"
+              onButtonClick={() => navigate("/")}
+            />
           )}
 
           {/* Tracking Result */}
@@ -166,7 +151,7 @@ const TrackResult = () => {
               </div>
 
               <div className="pt-6">
-                <Heading as="h3" className="mb-6">
+                <Heading as={3} className="mb-6">
                   Delivery Progress
                 </Heading>
 
