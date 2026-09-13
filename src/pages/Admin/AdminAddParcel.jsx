@@ -3,13 +3,19 @@ import { Link } from "react-router";
 import PageHeader from "../../components/widget/PageHeader";
 import SenderForm from "../../components/widget/SenderForm";
 import ReceiverForm from "../../components/widget/ReceiverForm";
-import Button from "../../components/ui/Button";
-import Heading from "../../components/ui/Heading";
-import Label from "../../components/ui/Label";
-import Input from "../../components/ui/Input";
 import ParcelDetailsForm from "../../components/widget/ParcelDetailsForm";
+import PaymentCost from "../../components/widget/PaymentCost";
+import { useState } from "react";
 
 const AdminAddParcel = () => {
+  const [parcelType, setParcelType] = useState("");
+  const [paymentMethod, setPaymentMethod] = useState("");
+  const [deliveryCharge, setDeliveryCharge] = useState(0);
+  const [codAmount, setCodAmount] = useState(0);
+
+  const totalCollection =
+    (Number(deliveryCharge) || 0) + (Number(codAmount) || 0);
+
   // add form function
   const handleAddParcel = (e) => {
     e.preventDefault();
@@ -23,6 +29,9 @@ const AdminAddParcel = () => {
     const receiverPhone = form.receiverPhone.value;
     const deliveryAddress = form.deliveryAddress.value;
 
+    const weight = form.weight.value || 0;
+    const description = form.description.value;
+
     console.log("Form submitted", {
       senderName,
       senderPhone,
@@ -30,6 +39,13 @@ const AdminAddParcel = () => {
       receiverName,
       receiverPhone,
       deliveryAddress,
+      weight,
+      description,
+      deliveryCharge,
+      parcelType,
+      codAmount,
+      paymentMethod,
+      totalCollection,
     });
 
     // Handle form submission logic here
@@ -63,72 +79,22 @@ const AdminAddParcel = () => {
           {/* Parcel + Payment */}
           <div className="lg:col-span-2 grid lg:grid-cols-2 gap-4">
             {/* Parcel Details */}
-            <ParcelDetailsForm />
+            <ParcelDetailsForm
+              parcelType={parcelType}
+              setParcelType={setParcelType}
+              deliveryCharge={deliveryCharge}
+              setDeliveryCharge={setDeliveryCharge}
+            />
 
             {/* Payment & Cost */}
-            <div className="border border-secondary/10 rounded p-4 h-fit">
-              <div className="space-y-4">
-                <Heading as={5}>Payment and Cost</Heading>
-
-                <div>
-                  <Label htmlFor="paymentMethod">Payment Method</Label>
-                  <select
-                    id="paymentMethod"
-                    name="paymentMethod"
-                    defaultValue=""
-                    className="border border-secondary/10 py-3 px-3 focus:outline-none focus:ring-2 focus:ring-accent w-full rounded"
-                  >
-                    <option value="" disabled>
-                      Select Payment Method
-                    </option>
-                    <option value="cod">Cash on Delivery</option>
-                    <option value="prepaid">PrePaid</option>
-                  </select>
-                </div>
-
-                <div>
-                  <Label htmlFor="codAmount">COD Amount (৳)</Label>
-                  <Input
-                    id="codAmount"
-                    name="codAmount"
-                    type="number"
-                    placeholder="Enter COD amount"
-                  />
-                </div>
-
-                {/* Cart Summary */}
-                <div className="rounded-lg border border-secondary/10 p-4">
-                  <div className="space-y-3 text-sm">
-                    <div className="flex items-center justify-between">
-                      <span className="text-secondary">Delivery Charge</span>
-                      <span className="font-medium">৳150</span>
-                    </div>
-
-                    <div className="flex items-center justify-between">
-                      <span className="text-secondary">COD Amount</span>
-                      <span className="font-medium">৳1,500</span>
-                    </div>
-
-                    <div className="flex items-center justify-between">
-                      <span className="text-secondary">Payment Method</span>
-                      <span className="font-medium">Cash on Delivery</span>
-                    </div>
-
-                    <div className="border-t border-secondary/10 pt-3">
-                      <div className="flex items-center justify-between">
-                        <span className="font-semibold">Total Collection</span>
-                        <span className="text-lg font-bold text-accent">
-                          ৳1,650
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <Button type="submit" variant="primary" className="mt-4 w-full">
-                Add Parcel
-              </Button>
-            </div>
+            <PaymentCost
+              deliveryCharge={deliveryCharge}
+              paymentMethod={paymentMethod}
+              setPaymentMethod={setPaymentMethod}
+              codAmount={codAmount}
+              setCodAmount={setCodAmount}
+              totalCollection={totalCollection}
+            />
           </div>
         </div>
       </form>

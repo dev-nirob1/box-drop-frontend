@@ -1,9 +1,9 @@
 import Heading from "../ui/Heading";
 import Label from "../ui/Label";
 import Input from "../ui/Input";
-import Paragraph from "../ui/Paragraph";
+import Span from "../ui/Span";
 
-const ParcelDetailsForm = () => {
+const ParcelDetailsForm = ({parcelType, setParcelType, deliveryCharge, setDeliveryCharge}) => {
   return (
     <div className="border border-secondary/10 rounded p-4 h-fit">
       <div className="space-y-4">
@@ -11,16 +11,17 @@ const ParcelDetailsForm = () => {
 
         {/* Item Type */}
         <div>
-          <Label htmlFor="itemType">Item Type</Label>
+          <Label htmlFor="parcelType">Parcel Type</Label>
 
           <select
-            id="itemType"
-            name="itemType"
-            defaultValue=""
+            id="parcelType"
+            name="parcelType"
+            value={parcelType}
+            onChange={(e) => setParcelType(e.target.value)}
             className="border border-secondary/10 bg-background py-3 px-3 focus:outline-none focus:ring-2 focus:ring-accent w-full rounded"
           >
             <option value="" disabled>
-              Select Item Type
+              Select Parcel Type
             </option>
 
             <option value="document">Document</option>
@@ -42,9 +43,9 @@ const ParcelDetailsForm = () => {
             step="0.01"
           />
 
-          <Paragraph className="mt-1 text-xs">
+          <Span className="mt-1">
             Up to 20 kg: ৳150 | Above 20 kg: ৳8/kg
-          </Paragraph>
+          </Span>
         </div>
 
         {/* Description */}
@@ -67,6 +68,8 @@ const ParcelDetailsForm = () => {
             name="deliveryCharge"
             type="number"
             placeholder="Enter delivery charge"
+            value={deliveryCharge}
+            onChange={(e) => setDeliveryCharge(e.target.value)} 
           />
         </div>
       </div>
