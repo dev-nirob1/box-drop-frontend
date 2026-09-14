@@ -11,6 +11,7 @@ const PaymentCost = ({
   codAmount,
   setCodAmount,
   totalCollection,
+  submitting,
 }) => {
   return (
     <div className="border border-secondary/10 rounded p-4 h-fit">
@@ -99,8 +100,13 @@ const PaymentCost = ({
             </div>
           </div>
         </div>
-        <Button type="submit" variant="primary" className="w-full mt-4">
-          Add Parcel
+        <Button
+          type="submit"
+          variant="primary"
+          className="w-full mt-4"
+          disabled={submitting}
+        >
+          {submitting ? "Adding Parcel..." : "Add Parcel"}
         </Button>
       </div>
     </div>

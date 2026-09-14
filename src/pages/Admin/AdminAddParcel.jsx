@@ -1,55 +1,81 @@
 import { FiArrowLeft } from "react-icons/fi";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import PageHeader from "../../components/widget/PageHeader";
 import SenderForm from "../../components/widget/SenderForm";
 import ReceiverForm from "../../components/widget/ReceiverForm";
 import ParcelDetailsForm from "../../components/widget/ParcelDetailsForm";
 import PaymentCost from "../../components/widget/PaymentCost";
 import { useState } from "react";
+import Swal from "sweetalert2";
+import axios from "axios";
 
 const AdminAddParcel = () => {
   const [parcelType, setParcelType] = useState("");
   const [paymentMethod, setPaymentMethod] = useState("");
   const [deliveryCharge, setDeliveryCharge] = useState(0);
   const [codAmount, setCodAmount] = useState(0);
+  const [submitting, setSubmitting] = useState(false); //loading state handle
+
+  const navigate = useNavigate();
 
   const totalCollection =
     (Number(deliveryCharge) || 0) + (Number(codAmount) || 0);
 
   // add form function
-  const handleAddParcel = (e) => {
-    e.preventDefault();
-    const form = e.target;
+  const handleAddParcel = async (e) => {
+  e.preventDefault();
+  const form = e.target;
 
-    const senderName = form.senderName.value;
-    const senderPhone = form.senderPhone.value;
-    const from = form.from.value;
+  const senderName = form.senderName.value;
+  const senderPhone = form.senderPhone.value;
+  const from = form.from.value;
+  const receiverName = form.receiverName.value;
+  const receiverPhone = form.receiverPhone.value;
+  const deliveryAddress = form.deliveryAddress.value;
+  const weight = form.weight.value || 0;
+  const description = form.description.value;
 
-    const receiverName = form.receiverName.value;
-    const receiverPhone = form.receiverPhone.value;
-    const deliveryAddress = form.deliveryAddress.value;
-
-    const weight = form.weight.value || 0;
-    const description = form.description.value;
-
-    console.log("Form submitted", {
-      senderName,
-      senderPhone,
-      from,
-      receiverName,
-      receiverPhone,
-      deliveryAddress,
-      weight,
-      description,
-      deliveryCharge,
-      parcelType,
-      codAmount,
-      paymentMethod,
-      totalCollection,
-    });
-
-    // Handle form submission logic here
+  const parcelDetails = {
+    senderName,
+    senderPhone,
+    from,
+    receiverName,
+    receiverPhone,
+    deliveryAddress,
+    weight,
+    description,
+    deliveryCharge,
+    parcelType,
+    codAmount,
+    paymentMethod,
   };
+
+  try {
+    const res = await axios.post(
+      "http://localhost:3000/api/parcels",
+      parcelDetails,
+      { withCredentials: true }
+    );
+    setSubmitting(true)
+    if (res?.data?.trackingId) {
+      Swal.fire({
+        icon: "success",
+        title: "Parcel Created!",
+        text: `Tracking ID: ${res.data.trackingId}`,
+        confirmButtonColor: "#FA4318",
+      }).then(() => navigate("/admin"));
+    }
+  } catch (error) {
+    Swal.fire({
+      icon: "error",
+      title: "Failed to create parcel",
+      text: error?.response?.data?.message || "Something went wrong",
+      confirmButtonColor: "#FA4318",
+    })
+  }finally{
+    setSubmitting(false)
+  }
+};
   return (
     <div>
       {/* Back link */}
@@ -94,6 +120,7 @@ const AdminAddParcel = () => {
               codAmount={codAmount}
               setCodAmount={setCodAmount}
               totalCollection={totalCollection}
+              submitting={submitting}
             />
           </div>
         </div>

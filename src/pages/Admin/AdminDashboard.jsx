@@ -160,8 +160,8 @@ const AdminDashboard = () => {
             <div>Tracking ID</div>
             <div>Sender</div>
             <div>Receiver</div>
-            <div>Item</div>
-            <div>Payment</div>
+            <div>Parcel Type</div>
+            <div>Payment Method</div>
             <div>Cost</div>
             <div>Status</div>
             <div>Date</div>
@@ -194,15 +194,15 @@ const AdminDashboard = () => {
                 </Span>
               </TableData>
 
-              <TableData label="Item">
+              <TableData label="Parcel Type">
                 <Span className="text-sm text-primary">
-                  {parcel.selectedItem}
+                  {parcel.parcelType}
                 </Span>
               </TableData>
 
               <TableData label="Payment">
                 <Span className="text-sm text-primary">
-                  {parcel.paymentType}
+                  {parcel.paymentMethod}
                 </Span>
               </TableData>
 

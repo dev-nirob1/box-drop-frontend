@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams, Link } from "react-router";
+import { useParams, Link, useNavigate } from "react-router";
 import axios from "axios";
 import { FiArrowLeft } from "react-icons/fi";
 
@@ -8,15 +8,17 @@ import Label from "../../components/ui/Label";
 import Span from "../../components/ui/Span";
 import Button from "../../components/ui/Button";
 import StatusTimeline from "../../components/widget/StatusTimeline";
-import { statusOptions } from "../../utils/data";
+import Divider from "../../components/ui/Divider";
 import Swal from "sweetalert2";
 
 const AdminParcelEdit = () => {
   const { id } = useParams();
-
-  const [parcel, setParcel] = useState(null);
+  const navigate = useNavigate();
+  // console.log(id);
+  const [updating, setUpdating] = useState(false);
+  const [parcel, setParcel] = useState({});
   const [status, setStatus] = useState("");
-
+  // console.log(parcel);
   useEffect(() => {
     const getParcelDetails = async () => {
       try {
@@ -25,7 +27,6 @@ const AdminParcelEdit = () => {
         });
 
         const data = res?.data?.result;
-
         setParcel(data);
         setStatus(data.status);
       } catch (error) {
@@ -36,57 +37,31 @@ const AdminParcelEdit = () => {
     getParcelDetails();
   }, [id]);
 
-  const handleUpdate = async () => {
+  const handleUpdateStatus = async () => {
+        setUpdating(false);
     try {
       const res = await axios.patch(
         `http://localhost:3000/api/parcels/${id}`,
-        {
-          status,
-        },
+        { status },
         {
           withCredentials: true,
         },
       );
-
-      if (res?.data?.result?.modifiedCount > 0) {
-        const updatedRes = await axios.get(
-          `http://localhost:3000/api/parcels/${id}`,
-          {
-            withCredentials: true,
-          },
-        );
-
-        const updatedParcel = updatedRes?.data?.result;
-
-        setParcel(updatedParcel);
-        setStatus(updatedParcel.status);
+      if (res?.data?.message) {
         Swal.fire({
-          title: "Updated!",
-          text: "Parcel status updated successfully.",
           icon: "success",
-          timer: 1500,
-          showConfirmButton: false,
+          title: "Success",
+          text: res.data.message,
+        }).then(() => {
+          navigate("/admin");
         });
-        
       }
     } catch (error) {
       console.error(error);
+    }finally{
+      setUpdating(false);
     }
   };
-
-  if (!parcel) return null;
-
-  const timeline = statusOptions.map((status) => {
-    const history = parcel.statusHistory?.find(
-      (item) => item.status === status,
-    );
-
-    return {
-      label: status,
-      date: history?.updatedAt || history?.date || null,
-      completed: !!history,
-    };
-  });
 
   return (
     <div>
@@ -102,7 +77,6 @@ const AdminParcelEdit = () => {
       {/* Heading */}
       <div className="mb-6">
         <Heading as={3}>Parcel Details</Heading>
-
         <p className="mt-1 text-sm text-secondary">
           View parcel information, delivery details and tracking status.
         </p>
@@ -137,7 +111,7 @@ const AdminParcelEdit = () => {
               </div>
             </div>
 
-            <div className="my-6 border-t border-secondary/10" />
+            <Divider />
 
             {/* Receiver */}
             <div>
@@ -168,21 +142,22 @@ const AdminParcelEdit = () => {
           <div className="rounded-md border border-secondary/10 bg-white p-5">
             <div className="mb-5">
               <Span>Tracking ID</Span>
-
               <Heading as={5} className="mb-0 mt-1">
                 {parcel.trackingId}
               </Heading>
             </div>
 
-            <div className="border-t border-secondary/10 pt-5">
+            <Divider />
+
+            <div>
               <Heading as={5} className="mb-5">
                 Delivery Information
               </Heading>
 
               <div className="space-y-4">
                 <div>
-                  <Span>Item Type</Span>
-                  <Label className="text-primary">{parcel.selectedItem}</Label>
+                  <Span>Parcel Type</Span>
+                  <Label className="text-primary">{parcel.parcelType}</Label>
                 </div>
 
                 <div>
@@ -190,8 +165,7 @@ const AdminParcelEdit = () => {
                   <Label className="text-primary">{parcel.description}</Label>
                 </div>
 
-                {/* Weight only for Other */}
-                {parcel.selectedItem === "other" && parcel.weight && (
+                {parcel.parcelType === "other" && parcel.weight && (
                   <div>
                     <Span>Weight</Span>
                     <Label className="text-primary">{parcel.weight} kg</Label>
@@ -206,18 +180,18 @@ const AdminParcelEdit = () => {
                 </div>
 
                 <div>
-                  <Span>Payment Type</Span>
-                  <Label className="text-primary">{parcel.paymentType}</Label>
+                  <Span>Payment Method</Span>
+                  <Label className="text-primary">{parcel.paymentMethod}</Label>
                 </div>
 
                 <div>
                   <Span>Payment Status</Span>
                   <Label className="text-primary">
-                    {parcel.paymentType === "cod" ? "Unpaid" : "Paid"}
+                    {parcel.paymentMethod === "cod" ? "Unpaid" : "Paid"}
                   </Label>
                 </div>
 
-                {parcel.paymentType === "cod" && (
+                {parcel.paymentMethod === "cod" && (
                   <div>
                     <Span>COD Amount</Span>
                     <Label className="text-primary">৳{parcel.codAmount}</Label>
@@ -225,13 +199,16 @@ const AdminParcelEdit = () => {
                 )}
 
                 <div>
-                  <Span>Total Cost</Span>
-                  <Label className="text-primary">৳{parcel.totalCost}</Label>
+                  <Span>Total Collection</Span>
+                  <Label className="text-primary">
+                    ৳
+                    {Number(parcel.deliveryCharge || 0) +
+                      Number(parcel.codAmount || 0)}
+                  </Label>
                 </div>
 
                 <div>
                   <Span>Current Status</Span>
-
                   <div className="mt-1">
                     <span className="inline-flex rounded-full bg-amber-100 px-3 py-1 text-xs font-medium text-amber-600">
                       {parcel.status}
@@ -251,7 +228,7 @@ const AdminParcelEdit = () => {
               Tracking Timeline
             </Heading>
 
-            <StatusTimeline steps={timeline} />
+            <StatusTimeline steps={parcel?.statusHistory || []} />
           </div>
 
           {/* Action */}
@@ -271,9 +248,9 @@ const AdminParcelEdit = () => {
                   onChange={(e) => setStatus(e.target.value)}
                   className="w-full rounded-md border border-secondary/30 px-4 py-3 text-primary focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/40"
                 >
-                  {statusOptions.map((option) => (
-                    <option key={option} value={option}>
-                      {option}
+                  {parcel?.statusHistory?.map((item) => (
+                    <option key={item.status} value={item.status}>
+                      {item.status}
                     </option>
                   ))}
                 </select>
@@ -283,9 +260,10 @@ const AdminParcelEdit = () => {
                 type="button"
                 variant="primary"
                 className="w-full"
-                onClick={handleUpdate}
+                disabled={updating}
+                onClick={handleUpdateStatus}
               >
-                Save Changes
+                {updating ? "Updating..." : "Save Changes"}
               </Button>
             </div>
           </div>

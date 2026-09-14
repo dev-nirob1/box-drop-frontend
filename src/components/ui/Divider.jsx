@@ -1,13 +1,15 @@
 import { cn } from "../../utils/cn";
 
-const Divider = ({ text = "OR", className }) => {
+const Divider = ({ text, className }) => {
   return (
-    <div className={cn("my-6 flex items-center gap-4", className)}>
+    <div className={cn("my-6 flex items-center", className)}>
       <div className="h-px flex-1 bg-secondary/30" />
 
-      <span className="text-sm text-secondary">
-        {text}
-      </span>
+     {text&& (
+        <span className="text-sm text-secondary mx-4">
+          {text}
+        </span>
+      )}
 
       <div className="h-px flex-1 bg-secondary/30" />
     </div>
