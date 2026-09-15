@@ -9,7 +9,7 @@ const AuthProvider = ({ children }) => {
 
   const login = async (loginInfo) => {
     const res = await axios.post(
-      "http://localhost:3000/api/auth/login",
+      "https://box-drop-backend.onrender.com/api/auth/login",
       loginInfo,
       {
         withCredentials: true,
@@ -19,13 +19,13 @@ const AuthProvider = ({ children }) => {
   };
 
   const register = async (userInfo) => {
-    const res = await axios.post("http://localhost:3000/api/users", userInfo);
+    const res = await axios.post("https://box-drop-backend.onrender.com/api/users", userInfo);
     return res?.data;
   };
 
   const logout = async () => {
     const res = await axios.post(
-      "http://localhost:3000/api/auth/logout",
+      "https://box-drop-backend.onrender.com/api/auth/logout",
       {},
       { withCredentials: true },
     );
@@ -37,7 +37,7 @@ const AuthProvider = ({ children }) => {
   useEffect(() => {
     const currentUser = async () => {
       try {
-        const res = await axios.get("http://localhost:3000/api/auth/me", {
+        const res = await axios.get("https://box-drop-backend.onrender.com/api/auth/me", {
           withCredentials: true,
         });
         console.log(res?.data);

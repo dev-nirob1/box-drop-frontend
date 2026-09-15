@@ -1,5 +1,12 @@
 import { Link, NavLink } from "react-router";
-import { FiPackage, FiGrid, FiUsers, FiLogOut, FiX, FiHome } from "react-icons/fi";
+import {
+  FiPackage,
+  FiGrid,
+  FiUsers,
+  FiLogOut,
+  FiX,
+  FiHome,
+} from "react-icons/fi";
 import { cn } from "../../utils/cn";
 import { useSidebar } from "../../hooks/useSidebar";
 import Image from "../ui/Image";

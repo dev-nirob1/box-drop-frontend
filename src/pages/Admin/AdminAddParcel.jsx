@@ -52,7 +52,7 @@ const AdminAddParcel = () => {
 
   try {
     const res = await axios.post(
-      "http://localhost:3000/api/parcels",
+      "https://box-drop-backend.onrender.com/api/parcels",
       parcelDetails,
       { withCredentials: true }
     );

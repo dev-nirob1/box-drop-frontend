@@ -38,7 +38,7 @@ const TrackResult = () => {
         setError("");
 
         const res = await axios.get(
-          `http://localhost:3000/api/track/${trackingId}`,
+          `https://box-drop-backend.onrender.com/api/track/${trackingId}`,
         );
 
         setParcel(res.data.result);

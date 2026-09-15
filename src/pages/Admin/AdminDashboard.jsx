@@ -37,10 +37,10 @@ const AdminDashboard = () => {
   const getDashboardData = async () => {
     try {
       const [parcelsRes, overviewRes] = await Promise.all([
-        axios.get("http://localhost:3000/api/parcels", {
+        axios.get("https://box-drop-backend.onrender.com/api/parcels", {
           withCredentials: true,
         }),
-        axios.get("http://localhost:3000/api/parcels/overview", {
+        axios.get("https://box-drop-backend.onrender.com/api/parcels/overview", {
           withCredentials: true,
         }),
       ]);
@@ -70,7 +70,7 @@ const AdminDashboard = () => {
 
     try {
       const res = await axios.delete(
-        `http://localhost:3000/api/parcels/${trackingId}`,
+        `https://box-drop-backend.onrender.com/api/parcels/${trackingId}`,
         {
           withCredentials: true,
         },

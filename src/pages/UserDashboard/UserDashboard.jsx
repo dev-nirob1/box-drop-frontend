@@ -22,7 +22,7 @@ const UserDashboard = () => {
         setLoading(true);
 
         const res = await axios.get(
-          "http://localhost:3000/api/user/parcels",
+          "https://box-drop-backend.onrender.com/api/user/parcels",
           { withCredentials: true },
         );
 

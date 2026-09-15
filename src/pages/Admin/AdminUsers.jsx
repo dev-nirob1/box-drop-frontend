@@ -13,7 +13,7 @@ const AdminUsers = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const res = await axios.get("http://localhost:3000/api/users", {
+        const res = await axios.get("https://box-drop-backend.onrender.com/api/users", {
           withCredentials: true,
         });
         setAllUsers(res?.data);

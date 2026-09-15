@@ -20,7 +20,7 @@ const ParcelDetail = () => {
     const getParcelDetails = async () => {
       try {
         const res = await axios.get(
-          `http://localhost:3000/api/user/parcels/${id}`,
+          `https://box-drop-backend.onrender.com/api/user/parcels/${id}`,
           {
             withCredentials: true,
           },

@@ -23,7 +23,7 @@ const AdminParcelEdit = () => {
   useEffect(() => {
     const getParcelDetails = async () => {
       try {
-        const res = await axios.get(`http://localhost:3000/api/parcels/${id}`, {
+        const res = await axios.get(`https://box-drop-backend.onrender.com/api/parcels/${id}`, {
           withCredentials: true,
         });
 
@@ -42,7 +42,7 @@ const AdminParcelEdit = () => {
     setUpdating(false);
     try {
       const res = await axios.patch(
-        `http://localhost:3000/api/parcels/${id}`,
+        `https://box-drop-backend.onrender.com/api/parcels/${id}`,
         { status },
         {
           withCredentials: true,
