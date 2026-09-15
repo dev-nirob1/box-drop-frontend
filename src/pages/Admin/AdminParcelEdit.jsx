@@ -10,6 +10,7 @@ import Button from "../../components/ui/Button";
 import StatusTimeline from "../../components/widget/StatusTimeline";
 import Divider from "../../components/ui/Divider";
 import Swal from "sweetalert2";
+import PageHeader from "../../components/widget/PageHeader";
 
 const AdminParcelEdit = () => {
   const { id } = useParams();
@@ -38,7 +39,7 @@ const AdminParcelEdit = () => {
   }, [id]);
 
   const handleUpdateStatus = async () => {
-        setUpdating(false);
+    setUpdating(false);
     try {
       const res = await axios.patch(
         `http://localhost:3000/api/parcels/${id}`,
@@ -58,7 +59,7 @@ const AdminParcelEdit = () => {
       }
     } catch (error) {
       console.error(error);
-    }finally{
+    } finally {
       setUpdating(false);
     }
   };
@@ -76,10 +77,10 @@ const AdminParcelEdit = () => {
 
       {/* Heading */}
       <div className="mb-6">
-        <Heading as={3}>Parcel Details</Heading>
-        <p className="mt-1 text-sm text-secondary">
-          View parcel information, delivery details and tracking status.
-        </p>
+        <PageHeader
+          title="Parcel Details"
+          description="View parcel information, delivery details and tracking status."
+        />
       </div>
 
       {/* 3 Columns */}
@@ -202,8 +203,8 @@ const AdminParcelEdit = () => {
                   <Span>Total Collection</Span>
                   <Label className="text-primary">
                     ৳
-                    {Number(parcel.deliveryCharge || 0) +
-                      Number(parcel.codAmount || 0)}
+                    {Number(parcel?.deliveryCharge || 0) +
+                      Number(parcel?.codAmount || 0)}
                   </Label>
                 </div>
 
@@ -260,7 +261,7 @@ const AdminParcelEdit = () => {
                 type="button"
                 variant="primary"
                 className="w-full"
-                disabled={updating}
+                disabled={updating || status === "Delivered"}
                 onClick={handleUpdateStatus}
               >
                 {updating ? "Updating..." : "Save Changes"}

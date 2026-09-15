@@ -12,7 +12,6 @@ import {
 } from "react-icons/fi";
 
 import Heading from "../../components/ui/Heading";
-import Paragraph from "../../components/ui/Paragraph";
 import Button from "../../components/ui/Button";
 import StatCard from "../../components/widget/StatCard";
 import TableContainer from "../../components/ui/TableContainer";
@@ -24,6 +23,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
 import Span from "../../components/ui/Span";
+import PageHeader from "../../components/widget/PageHeader";
 
 const AdminDashboard = () => {
   const [parcels, setParcels] = useState([]);
@@ -126,10 +126,7 @@ const AdminDashboard = () => {
       {/* Heading + Add Parcel */}
       <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
         <div>
-          <Heading as={3}>All Parcels</Heading>
-          <Paragraph>
-            Manage and update parcel status across the platform.
-          </Paragraph>
+          <PageHeader title="All Parcels" description="Manage and update parcel status across the platform." />
         </div>
 
         <Link to="/admin/new">
@@ -156,7 +153,7 @@ const AdminDashboard = () => {
         </div>
 
         <TableContainer>
-          <TableHeader gridCols="md:grid-cols-[2fr_1.2fr_1.2fr_1fr_1fr_0.8fr_1.1fr_1fr_1.2fr]">
+          <TableHeader gridCols="md:grid-cols-[1.2fr_1.2fr_1.2fr_1fr_1fr_0.8fr_1.1fr_1fr_1.2fr]">
             <div>Tracking ID</div>
             <div>Sender</div>
             <div>Receiver</div>
@@ -170,7 +167,7 @@ const AdminDashboard = () => {
 
           {parcels.map((parcel) => (
             <TableRow
-              gridCols="md:grid-cols-[2fr_1.2fr_1.2fr_1fr_1fr_0.8fr_1.1fr_1fr_1.2fr]"
+              gridCols="md:grid-cols-[1.2fr_1.2fr_1.2fr_1fr_1fr_0.8fr_1.1fr_1fr_1.2fr]"
               key={parcel.trackingId}
             >
               <TableData label="Tracking ID" className="min-w-0">
@@ -208,7 +205,9 @@ const AdminDashboard = () => {
 
               <TableData label="Cost">
                 <Span className="text-sm text-primary">
-                  ৳{parcel.totalCost}
+                  ৳
+                  {Number(parcel?.deliveryCharge || 0) +
+                    Number(parcel?.codAmount || 0)}
                 </Span>
               </TableData>
 
