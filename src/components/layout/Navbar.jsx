@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 
 import { NavLink, Link } from "react-router";
@@ -16,8 +15,7 @@ const Navbar = () => {
 
   const { user, logout } = useAuth();
 
-  const dashboardPath =
-    user?.role === "admin" ? "/admin" : "/dashboard";
+  const dashboardPath = user?.role === "admin" ? "/admin" : "/dashboard";
 
   const navLinks = [
     { href: "/", label: "Home" },
@@ -81,36 +79,36 @@ const Navbar = () => {
               </li>
             ))}
 
-           {/* Auth */}
-<li>
-  {user ? (
-    <div className="flex items-center gap-3">
-      {/* Profile — static display, no link */}
-      <div className="flex items-center gap-2 rounded-full bg-accent/10 px-3 py-2">
-        <FiUser />
-        <span className="text-sm font-medium">{user.name}</span>
-      </div>
+            {/* Auth */}
+            <li>
+              {user ? (
+                <div className="flex items-center gap-3">
+                  {/* Profile — static display, no link */}
+                  <div className="flex items-center gap-2 rounded-full bg-accent/10 px-3 py-2">
+                    <FiUser />
+                    <span className="text-sm font-medium">{user.name}</span>
+                  </div>
 
-      {/* Logout */}
-      <button
-        type="button"
-        onClick={handleLogout}
-        className="flex cursor-pointer items-center gap-2 rounded bg-accent px-4 py-2 text-sm text-white transition-opacity hover:opacity-80"
-      >
-        <FiLogOut />
-        Logout
-      </button>
-    </div>
-  ) : (
-    <Link
-      to="/login"
-      onClick={() => setIsMenuOpen(false)}
-      className="rounded bg-accent px-5 py-2 text-white transition-opacity hover:opacity-80"
-    >
-      Login
-    </Link>
-  )}
-</li>
+                  {/* Logout */}
+                  <button
+                    type="button"
+                    onClick={handleLogout}
+                    className="flex cursor-pointer items-center gap-2 rounded bg-accent px-4 py-2 text-sm text-white transition-opacity hover:opacity-80"
+                  >
+                    <FiLogOut />
+                    Logout
+                  </button>
+                </div>
+              ) : (
+                <Link
+                  to="/login"
+                  onClick={() => setIsMenuOpen(false)}
+                  className="rounded bg-accent px-5 py-2 text-white transition-opacity hover:opacity-80"
+                >
+                  Login
+                </Link>
+              )}
+            </li>
           </ul>
 
           {/* Mobile Toggle */}
@@ -128,4 +126,3 @@ const Navbar = () => {
 };
 
 export default Navbar;
-

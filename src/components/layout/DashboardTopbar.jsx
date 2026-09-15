@@ -1,32 +1,50 @@
 import { FiMenu, FiLogOut, FiUser } from "react-icons/fi";
+
 import { useSidebar } from "../../hooks/useSidebar";
-import Heading from "../ui/Heading";
 import { useAuth } from "../../hooks/useAuth";
+
+import Heading from "../ui/Heading";
 
 const DashboardTopbar = () => {
   const { toggleSidebar } = useSidebar();
   const { user, logout } = useAuth();
-// console.log(user)
+
   return (
     <header className="flex items-center justify-between border-b border-secondary/10 bg-white px-4 py-4 lg:px-6">
-      {/* Hamburger + page title */}
+      {/* Left */}
       <div className="flex items-center gap-3">
         <button
           type="button"
           onClick={toggleSidebar}
-          className="text-2xl text-primary lg:hidden cursor-pointer"
+          className="cursor-pointer text-2xl text-primary lg:hidden"
         >
           <FiMenu />
         </button>
-        <Heading as={5}>
-          {user?.role === "admin" ? user?.role : user?.phone}
-        </Heading>
+
+        <div>
+          <p className="text-xs text-secondary/60">
+            {user?.role === "admin" ? "Admin Panel" : "Welcome back"}
+          </p>
+
+          <Heading as={5} className="mt-0.5">
+            {user?.role === "admin" ? "Administrator" : user?.name}
+          </Heading>
+        </div>
       </div>
 
-      {/* User info + logout */}
-      <div className="flex items-center gap-4">
-        <div className="flex items-center gap-1">
-          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-accent/10 text-accent cursor-pointer ">
+      {/* Right */}
+      <div className="flex items-center gap-3">
+        <div className="hidden items-center gap-3 sm:flex">
+          <div className="text-right">
+            <p className="text-sm font-semibold text-primary">
+              {user?.name}
+            </p>
+            <p className="text-xs capitalize text-secondary/60">
+              {user?.role}
+            </p>
+          </div>
+
+          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-accent/10 text-accent">
             <FiUser className="text-lg" />
           </div>
         </div>
@@ -34,10 +52,10 @@ const DashboardTopbar = () => {
         <button
           onClick={logout}
           type="button"
-          className="flex items-center gap-2 rounded-md border  px-3 py-2 text-sm font-medium transition-colors border-accent/30 bg-accent/10 text-accent cursor-pointer"
+          className="flex cursor-pointer items-center gap-2 rounded-md border border-accent/20 bg-accent/5 px-3 py-2 text-sm font-medium text-accent transition-colors hover:bg-accent hover:text-white"
         >
           <FiLogOut />
-          Logout
+          <span className="hidden sm:inline">Logout</span>
         </button>
       </div>
     </header>
@@ -45,3 +63,4 @@ const DashboardTopbar = () => {
 };
 
 export default DashboardTopbar;
+

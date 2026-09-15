@@ -69,14 +69,14 @@ const DashboardSidebar = () => {
         </nav>
 
         <div className="border-t border-secondary/10 px-3 py-4">
-          <button
+            <button
           onClick={logout}
-            type="button"
-            className="flex w-full items-center gap-3 rounded-md px-3 py-2.5 text-sm font-medium text-secondary transition-colors hover:bg-secondary/5 hover:text-primary cursor-pointer"
-          >
-            <FiLogOut className="text-lg" />
-            Logout
-          </button>
+          type="button"
+          className="w-full flex cursor-pointer justify-center items-center gap-2 rounded-md border border-accent/20 bg-accent/5 px-3 py-2 text-sm font-medium text-accent transition-colors hover:bg-accent hover:text-white"
+        >
+          <FiLogOut />
+          <span className="hidden sm:inline">Logout</span>
+        </button>
         </div>
       </aside>
     </>

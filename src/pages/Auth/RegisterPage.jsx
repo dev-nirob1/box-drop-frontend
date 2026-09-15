@@ -39,6 +39,7 @@ const RegisterPage = () => {
       return setError("Enter a valid Bangladeshi phone number");
     }
 
+    console.log(password, password.length, PASSWORD_REGEX.test(password));
     if (!PASSWORD_REGEX.test(password)) {
       return setError(
         "Password must be at least 6 characters and include 1 capital letter, 1 number and 1 special character",
@@ -50,7 +51,6 @@ const RegisterPage = () => {
     }
 
     const userData = { name, phone, password };
-
     setSubmitting(true);
     try {
       const data = await register(userData);
