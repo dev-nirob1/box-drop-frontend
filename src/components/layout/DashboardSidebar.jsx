@@ -1,5 +1,5 @@
 import { Link, NavLink } from "react-router";
-import { FiPackage, FiGrid, FiUsers, FiLogOut, FiX } from "react-icons/fi";
+import { FiPackage, FiGrid, FiUsers, FiLogOut, FiX, FiHome } from "react-icons/fi";
 import { cn } from "../../utils/cn";
 import { useSidebar } from "../../hooks/useSidebar";
 import Image from "../ui/Image";
@@ -15,7 +15,7 @@ const adminLinks = [
 
 const DashboardSidebar = () => {
   const { isSidebarOpen, closeSidebar } = useSidebar();
-  const {user, logout} = useAuth()
+  const { user, logout } = useAuth();
   const links = user?.role === "admin" ? adminLinks : userLinks;
 
   return (
@@ -69,14 +69,22 @@ const DashboardSidebar = () => {
         </nav>
 
         <div className="border-t border-secondary/10 px-3 py-4">
-            <button
-          onClick={logout}
-          type="button"
-          className="w-full flex cursor-pointer justify-center items-center gap-2 rounded-md border border-accent/20 bg-accent/5 px-3 py-2 text-sm font-medium text-accent transition-colors hover:bg-accent hover:text-white"
-        >
-          <FiLogOut />
-          <span className="hidden sm:inline">Logout</span>
-        </button>
+          <Link
+            to="/"
+            onClick={closeSidebar}
+            className="flex w-full items-center gap-2 rounded-md px-3 py-2 mb-3 text-sm font-medium text-secondary transition-colors bg-secondary/5 hover:bg-accent/5 hover:text-accent"
+          >
+            <FiHome />
+            Back to Home
+          </Link>
+          <button
+            onClick={logout}
+            type="button"
+            className="w-full flex cursor-pointer justify-center items-center gap-2 rounded-md border border-accent/20 bg-accent/5 px-3 py-2 text-sm font-medium text-accent transition-colors hover:bg-accent hover:text-white"
+          >
+            <FiLogOut />
+            <span className="hidden sm:inline">Logout</span>
+          </button>
         </div>
       </aside>
     </>

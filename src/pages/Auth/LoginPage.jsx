@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { FiEye, FiEyeOff } from "react-icons/fi";
-import { Link, useNavigate } from "react-router";
+import { Link, useLocation, useNavigate } from "react-router";
 import Swal from "sweetalert2";
 import Paragraph from "../../components/ui/Paragraph";
 import Input from "../../components/ui/Input";
@@ -13,10 +13,12 @@ import PageHeader from "../../components/widget/PageHeader";
 const LoginPage = () => {
   const { login, setUser } = useAuth();
   const navigate = useNavigate();
-
+  const location = useLocation();
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
+
+  const from = location.state?.from || "/";
 
   // login form handle
   const handleLogin = async (e) => {
@@ -43,7 +45,7 @@ const LoginPage = () => {
           text: data?.message,
           confirmButtonColor: "#FA4318",
         }).then(() => {
-          navigate("/");
+          navigate(from, { replace: true });
         });
       }
     } catch (err) {
