@@ -1,32 +1,43 @@
+
 import { useState } from "react";
-import { Link } from "react-router";
+
+import { NavLink, Link } from "react-router";
+
 import { FaBars, FaXmark } from "react-icons/fa6";
-import { FiUser, FiGrid, FiLogOut } from "react-icons/fi";
+import { FiUser, FiLogOut } from "react-icons/fi";
+
 import Container from "../ui/Container";
-import { useAuth } from "../../hooks/useAuth";
 import Image from "../ui/Image";
 
-const navLinks = [
-  { href: "/", label: "Home" },
-  { href: "/track", label: "Track Parcel" },
-  { href: "/#how-it-works", label: "How It Works" },
-  { href: "/#services", label: "Services" },
-  { href: "/#why-us", label: "Why Choose Us" },
-];
+import { useAuth } from "../../hooks/useAuth";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isProfileOpen, setIsProfileOpen] = useState(false);
+
   const { user, logout } = useAuth();
+
+  const dashboardPath =
+    user?.role === "admin" ? "/admin" : "/dashboard";
+
+  const navLinks = [
+    { href: "/", label: "Home" },
+    { href: "/track", label: "Track Parcel" },
+  ];
+
+  if (user) {
+    navLinks.push({
+      href: dashboardPath,
+      label: "Dashboard",
+    });
+  }
 
   const handleLogout = () => {
     logout();
-    setIsProfileOpen(false);
     setIsMenuOpen(false);
   };
 
   return (
-    <header className="fixed top-0 left-0 z-999 w-full bg-white text-primary py-3">
+    <header className="fixed left-0 top-0 z-999 w-full bg-white py-3 text-primary">
       <Container>
         <div className="flex items-center justify-between">
           {/* Logo */}
@@ -38,85 +49,73 @@ const Navbar = () => {
             />
           </Link>
 
-          {/* Navigation Links */}
+          {/* Navigation */}
           <ul
-            className={`fixed lg:static top-0 h-screen lg:h-auto w-4/5 lg:w-auto flex-col lg:flex-row items-start lg:items-center gap-4 lg:gap-6 bg-primary lg:bg-transparent text-white lg:text-inherit p-6 lg:p-0 transition-[left] duration-300 flex ${
+            className={`fixed top-0 flex h-screen w-4/5 flex-col items-start gap-4 bg-primary p-6 text-white transition-[left] duration-300 lg:static lg:h-auto lg:w-auto lg:flex-row lg:items-center lg:gap-6 lg:bg-transparent lg:p-0 lg:text-inherit ${
               isMenuOpen ? "left-0" : "-left-full lg:left-auto"
             }`}
           >
+            {/* Mobile Logo */}
             <li className="lg:hidden">
-              <Link to="/">
-                <Image
-                  src="/images/logo-footer.png"
-                  className="h-16 w-auto"
-                  alt="logo"
-                />
-              </Link>
+              <Image
+                src="/images/logo-footer.png"
+                className="h-16 w-auto"
+                alt="logo"
+              />
             </li>
+
+            {/* Links */}
             {navLinks.map((link) => (
               <li key={link.href}>
-                <Link
+                <NavLink
                   to={link.href}
                   onClick={() => setIsMenuOpen(false)}
-                  className="relative inline-block py-2 font-medium hover:text-accent transition-colors duration-300 after:content-[''] after:absolute after:bottom-0 after:left-0 after:h-0.5 after:bg-accent after:w-0 hover:after:w-full after:transition-all after:duration-300"
+                  className={({ isActive }) =>
+                    `relative inline-block py-2 font-medium transition-colors duration-300 hover:text-accent ${
+                      isActive ? "text-accent" : ""
+                    }`
+                  }
                 >
                   {link.label}
-                </Link>
+                </NavLink>
               </li>
             ))}
 
-            {/* Auth section */}
+            {/* Auth */}
             <li>
               {user ? (
-                <div className="relative">
+                <div className="flex items-center gap-3">
+                  {/* Profile / Dashboard */}
+                  <NavLink
+                    to={dashboardPath}
+                    onClick={() => setIsMenuOpen(false)}
+                    className={({ isActive }) =>
+                      `flex items-center gap-2 rounded-full bg-accent/10 px-3 py-2 transition-colors hover:text-accent ${
+                        isActive ? "text-accent" : ""
+                      }`
+                    }
+                  >
+                    <FiUser />
+                    <span className="text-sm font-medium">
+                      {user.name}
+                    </span>
+                  </NavLink>
+
+                  {/* Logout */}
                   <button
                     type="button"
-                    onClick={() => setIsProfileOpen((prev) => !prev)}
-                    className="flex h-10 w-10 items-center justify-center rounded-full bg-accent/10 text-accent cursor-pointer"
+                    onClick={handleLogout}
+                    className="flex cursor-pointer items-center gap-2 rounded bg-accent px-4 py-2 text-sm text-white transition-opacity hover:opacity-80"
                   >
-                    <FiUser className="text-lg" />
+                    <FiLogOut />
+                    Logout
                   </button>
-
-                  {isProfileOpen && (
-                    <div className="static lg:absolute lg:right-0 lg:top-12 lg:w-48 rounded-md border border-secondary/10 bg-white text-primary shadow-sm mt-3 lg:mt-0">
-                      {user.role === "admin" && (
-                        <Link
-                          to="/admin"
-                          onClick={() => setIsProfileOpen(false)}
-                          className="flex items-center gap-2 px-4 py-3 text-sm hover:bg-secondary/5"
-                        >
-                          <FiGrid />
-                          Admin Dashboard
-                        </Link>
-                      )}
-
-                      {user.role !== "admin" && (
-                        <Link
-                          to="/dashboard"
-                          onClick={() => setIsProfileOpen(false)}
-                          className="flex items-center gap-2 px-4 py-3 text-sm hover:bg-secondary/5"
-                        >
-                          <FiGrid />
-                          Dashboard
-                        </Link>
-                      )}
-
-                      <button
-                        type="button"
-                        onClick={handleLogout}
-                        className="flex w-full items-center gap-2 px-4 py-3 text-left text-sm text-red-500 hover:bg-red-50 cursor-pointer"
-                      >
-                        <FiLogOut />
-                        Logout
-                      </button>
-                    </div>
-                  )}
                 </div>
               ) : (
                 <Link
                   to="/login"
                   onClick={() => setIsMenuOpen(false)}
-                  className="bg-accent text-white px-5 py-2 rounded"
+                  className="rounded bg-accent px-5 py-2 text-white transition-opacity hover:opacity-80"
                 >
                   Login
                 </Link>
@@ -124,9 +123,10 @@ const Navbar = () => {
             </li>
           </ul>
 
-          {/* Mobile menu toggle */}
+          {/* Mobile Toggle */}
           <button
-            className="lg:hidden h-8 w-8 text-2xl flex items-center justify-center"
+            type="button"
+            className="flex h-8 w-8 items-center justify-center text-2xl lg:hidden"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
           >
             {isMenuOpen ? <FaXmark /> : <FaBars />}
@@ -138,3 +138,4 @@ const Navbar = () => {
 };
 
 export default Navbar;
+
