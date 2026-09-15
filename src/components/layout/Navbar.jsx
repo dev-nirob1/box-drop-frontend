@@ -81,46 +81,36 @@ const Navbar = () => {
               </li>
             ))}
 
-            {/* Auth */}
-            <li>
-              {user ? (
-                <div className="flex items-center gap-3">
-                  {/* Profile / Dashboard */}
-                  <NavLink
-                    to={dashboardPath}
-                    onClick={() => setIsMenuOpen(false)}
-                    className={({ isActive }) =>
-                      `flex items-center gap-2 rounded-full bg-accent/10 px-3 py-2 transition-colors hover:text-accent ${
-                        isActive ? "text-accent" : ""
-                      }`
-                    }
-                  >
-                    <FiUser />
-                    <span className="text-sm font-medium">
-                      {user.name}
-                    </span>
-                  </NavLink>
+           {/* Auth */}
+<li>
+  {user ? (
+    <div className="flex items-center gap-3">
+      {/* Profile — static display, no link */}
+      <div className="flex items-center gap-2 rounded-full bg-accent/10 px-3 py-2">
+        <FiUser />
+        <span className="text-sm font-medium">{user.name}</span>
+      </div>
 
-                  {/* Logout */}
-                  <button
-                    type="button"
-                    onClick={handleLogout}
-                    className="flex cursor-pointer items-center gap-2 rounded bg-accent px-4 py-2 text-sm text-white transition-opacity hover:opacity-80"
-                  >
-                    <FiLogOut />
-                    Logout
-                  </button>
-                </div>
-              ) : (
-                <Link
-                  to="/login"
-                  onClick={() => setIsMenuOpen(false)}
-                  className="rounded bg-accent px-5 py-2 text-white transition-opacity hover:opacity-80"
-                >
-                  Login
-                </Link>
-              )}
-            </li>
+      {/* Logout */}
+      <button
+        type="button"
+        onClick={handleLogout}
+        className="flex cursor-pointer items-center gap-2 rounded bg-accent px-4 py-2 text-sm text-white transition-opacity hover:opacity-80"
+      >
+        <FiLogOut />
+        Logout
+      </button>
+    </div>
+  ) : (
+    <Link
+      to="/login"
+      onClick={() => setIsMenuOpen(false)}
+      className="rounded bg-accent px-5 py-2 text-white transition-opacity hover:opacity-80"
+    >
+      Login
+    </Link>
+  )}
+</li>
           </ul>
 
           {/* Mobile Toggle */}
