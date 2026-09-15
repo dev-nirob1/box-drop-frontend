@@ -8,36 +8,35 @@ const steps = [
     id: 1,
     step: 1,
     image:
-      "https://images.unsplash.com/photo-1580674285054-bed31e145f59?w=300&q=60",
-    title: "Book pickup",
-    description: "Schedule a pickup online with your parcel details.",
+      "/images/howItWorks/booking.avif",
+    title: "Book Your Parcel",
+    description: "Visit a courier point and book your parcel with the required details.",
   },
   {
     id: 2,
     step: 2,
     image:
-      "https://images.unsplash.com/photo-1566576912321-d58ddd7a6088?w=300&q=60",
-    title: "Parcel picked up",
-    description: "Courier collects your parcel from your address.",
+      "/images/howItWorks/onTheWay.avif",
+    title: "On the Way",
+    description: "Your parcel is processed and sent toward its destination.",
   },
   {
     id: 3,
     step: 3,
     image:
-      "https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?w=300&q=60",
-    title: "In transit",
-    description: "Track live location updates as it moves.",
+      "/images/howItWorks/readyToDeliver.avif",
+    title: "Ready to Deliver",
+    description: "Your parcel has reached the destination area and is ready for delivery.",
   },
   {
     id: 4,
     step: 4,
     image:
-      "https://images.unsplash.com/photo-1607166452427-7e4477079cb9?w=300&q=60",
+      "/images/howItWorks/delivered.avif",
     title: "Delivered",
-    description: "Parcel reaches its destination safely.",
+    description: "Your parcel is successfully delivered to the recipient.",
   },
 ];
-
 const HowItWorks = () => {
   return (
     <section className="py-16 bg-secondary/5">
