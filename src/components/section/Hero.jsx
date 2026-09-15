@@ -33,7 +33,7 @@ const Hero = () => {
       return;
     }
 
-    navigate(`/track/${id}`);
+    navigate(`/track?trackingId=${id}`);
   };
 
   return (

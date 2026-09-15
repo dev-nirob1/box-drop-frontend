@@ -17,7 +17,7 @@ export const router = createBrowserRouter([
         element: <LandingPage />,
       },
       {
-        path: "/track/:trackingId",
+        path: "/track",
         element: <TrackingPage />,
       },
     ],
